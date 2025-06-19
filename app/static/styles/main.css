@@ -267,3 +267,62 @@ body {
     line-height: 1.6;
     margin: 0;
 }
+
+/* Education Section */
+.education-section {
+    margin-top: 20px;
+}
+
+.education-container {
+    margin-top: 30px;
+}
+
+.education-card {
+    background: white;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #ffac46;
+    border-right: 4px solid #ffac46;
+    border-bottom: 4px solid #0c59ff;
+    border-top: 4px solid #0c59ff;
+}
+
+.education-card:last-child {
+    margin-bottom: 0;
+}
+
+.education-card h3 {
+    color: #1C539F;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.education-card .school {
+    color: #d4851a;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.education-card .duration {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.education-card ul {
+    color: #000000;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.education-card li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.education-card li:last-child {
+    margin-bottom: 0;
+}

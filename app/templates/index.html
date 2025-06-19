@@ -44,6 +44,31 @@
     </div>
 </section>
 
+<!-- Education -->
+<section class="hero">
+    <div class="hero-text">
+        <div class="about education-section">
+            <h2>Education</h2>
+            <div class="education-container">
+                {% for edu in education %}
+                <div class="education-card">
+                    <h3>{{ edu.degree }}</h3>
+                    <div class="school">{{ edu.school }}</div>
+                    <div class="duration">{{ edu.duration }}</div>
+                    {% if edu.achievements %}
+                    <ul>
+                        {% for achievement in edu.achievements %}
+                        <li>{{ achievement }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Hobbies -->
 <section class="hero">
     <div class="hero-text">

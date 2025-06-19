@@ -29,6 +29,9 @@ work_experiences = [
     }
 ]
 
+# Education data structure - will be populated by other team members
+education = []
+
 hobbies = [
     {
         'name': 'Photography',
@@ -59,6 +62,7 @@ def index():
                          role="Software Developer",
                          about_text="As a proficient expert in AWS and cloud-based solutions, I am specialized in developing advanced data analytics and DevOp solutions for scalable, distributed systems. My skill set is particularly strong in collaborative teamwork and problem-solving within Agile environments. I am keen to contribute my expertise to projects and collaborate with a team of skilled professionals.",
                          work_experiences=work_experiences,
+                         education=education,
                          hobbies=hobbies)
 
 @app.route('/hobbies')
