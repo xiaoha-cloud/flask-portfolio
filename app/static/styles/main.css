@@ -95,3 +95,55 @@ body {
     font-size: 50px;
     font-weight: 700;
 }
+
+/* Styling for About Me section */
+
+.hero {
+    padding: 20px 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-text {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.about {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    border-left: 4px solid #ffac46;
+    border-right: 4px solid #ffac46;
+    border-bottom: 4px solid #0c59ff;
+    border-top: 4px solid #0c59ff;
+    text-align: center;
+}
+
+.about h2 {
+    color: #333;
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.about h1 {
+    font-size: 48px;
+    margin: 10px 0;
+    line-height: 1.2;
+}
+
+.about p {
+    color: #000000;
+    line-height: 1.6;
+    margin: 20px 0;
+}
+
+.highlight {
+    color: #1C539F;
+}
+
+.highlight-role {
+    color: #d4851a;
+}
