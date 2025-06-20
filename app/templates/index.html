@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+{% endblock %}
+
 {% block profile %}
 <div class="profile">
     <div id="profile-picture" class="profile-picture">
@@ -108,16 +113,18 @@
             </div>
         </div>
     </div>
-<!--Cool Map-->
 </section>
-    <section class="travel-map">
+
+<!-- Places I've Visited -->
+<section class="hero">
     <div class="hero-text">
         <div class="about">
             <h2>Places I've Visited</h2>
-            <div id="map"></div>
+            <div id="map" style="height: 400px;"></div>
         </div>
     </div>
 </section>
+
 {% endblock %}
 
 {% block extra_scripts %}
@@ -154,5 +161,3 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 {% endblock %}
-
-

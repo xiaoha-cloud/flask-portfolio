@@ -5,6 +5,20 @@ from dotenv import load_dotenv
 load_dotenv()
 app = Flask(__name__)
 
+# Navigation menu structure
+navigation_items = [
+    {'name': 'Home', 'url': '/', 'active': False},
+    {'name': 'Hobbies', 'url': '/hobbies', 'active': False},
+]
+
+def get_navigation(current_page):
+    nav_items = []
+    for item in navigation_items:
+        nav_item = item.copy()
+        nav_item['active'] = (nav_item['url'] == current_page)
+        nav_items.append(nav_item)
+    return nav_items
+
 # Data structures for dynamic content
 work_experiences = [
     {
@@ -112,6 +126,7 @@ def index():
                          work_experiences=work_experiences,
                          education=education,
                          hobbies=hobbies,
+                         navigation=get_navigation('/'),
                          visited_locations=visited_locations
                          )
 
@@ -120,4 +135,5 @@ def hobbies_page():
     return render_template('hobbies.html',
                          title="My Hobbies",
                          url=os.getenv("URL"),
-                         hobbies=hobbies)
+                         hobbies=hobbies,
+                         navigation=get_navigation('/hobbies'))
