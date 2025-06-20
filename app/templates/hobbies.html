@@ -1,79 +1,12 @@
 {% extends "base.html" %}
 
-{% block profile %}
-<div class="profile">
-    <div id="profile-picture" class="profile-picture">
-        <img src="/static/img/logo.jpg">
-    </div>
-    <h1>{{ title }}</h1>
-</div>
-{% endblock %}
+{% block title %}My Hobbies{% endblock %}
 
 {% block content %}
-<!-- About me -->
-<section class="hero">
-    <div class="hero-text">
-        <div class="about">
-            <h2>Hi</h2>
-            <h1>I'm <span class="highlight">{{ name }}</span><br />a <span class="highlight-role">{{ role }}</span></h1>
-            <p>{{ about_text }}</p>
-        </div>
-    </div>
-</section>
-
-<!-- Work Experience -->
-<section class="hero">
-    <div class="hero-text">
-        <div class="about work-section">
-            <h2>Work Experience</h2>
-            <div class="experience-container">
-                {% for experience in work_experiences %}
-                <div class="experience-card">
-                    <h3>{{ experience.title }}</h3>
-                    <div class="company">{{ experience.company }}</div>
-                    <div class="duration">{{ experience.duration }}</div>
-                    <ul>
-                        {% for achievement in experience.achievements %}
-                        <li>{{ achievement }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Education -->
-<section class="hero">
-    <div class="hero-text">
-        <div class="about education-section">
-            <h2>Education</h2>
-            <div class="education-container">
-                {% for edu in education %}
-                <div class="education-card">
-                    <h3>{{ edu.degree }}</h3>
-                    <div class="school">{{ edu.school }}</div>
-                    <div class="duration">{{ edu.duration }}</div>
-                    {% if edu.achievements %}
-                    <ul>
-                        {% for achievement in edu.achievements %}
-                        <li>{{ achievement }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Hobbies -->
 <section class="hero">
     <div class="hero-text">
         <div class="about hobbies-section">
-            <h2>Hobbies & Interests</h2>
+            <h2>My Hobbies & Interests</h2>
             <div class="hobbies-container">
                 {% for hobby in hobbies %}
                 <div class="hobby-card">
@@ -101,11 +34,16 @@
                     {% endif %}
                     <h3>{{ hobby.name }}</h3>
                     <p>{{ hobby.description }}</p>
+                    {% if hobby.details %}
+                    <div class="hobby-details">
+                        <h4>More About This Hobby</h4>
+                        <p>{{ hobby.details }}</p>
+                    </div>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
         </div>
-
     </div>
 </section>
 {% endblock %}
