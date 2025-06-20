@@ -1,4 +1,4 @@
-    p,
+p,
     h1,
     h2,
     h3,
@@ -26,6 +26,16 @@
         font-family: "Roboto", serif;
         font-weight: 700 !important;
         padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .nav-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
     }
 
     .nav-content .logo-touch-target {
@@ -47,6 +57,32 @@
 
     .nav-logo img {
         width: 200px;
+    }
+
+    /* Navigation Menu Styles */
+    .nav-menu {
+        display: flex;
+        gap: 0;
+    }
+
+    .nav-link {
+        color: white;
+        text-decoration: none;
+        padding: 15px 20px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        border-radius: 4px;
+        margin: 0 2px;
+    }
+
+    .nav-link:hover {
+        background-color: #ffac46;
+        color: white;
+    }
+
+    .nav-link.active {
+        background-color: #d4851a;
+        color: white;
     }
 
     .nav-content nav {
@@ -130,9 +166,11 @@
     }
 
     .hero-text {
-        max-width: 900px;
+        max-width: 1100px;
         margin: 0 auto;
         width: 100%;
+        display: flex;
+        justify-content: center;
     }
 
     .about {
@@ -140,13 +178,15 @@
         padding: 40px;
         border-radius: 8px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         border-left: 4px solid #ffac46;
         border-right: 4px solid #ffac46;
         border-bottom: 4px solid #0c59ff;
         border-top: 4px solid #0c59ff;
         text-align: center;
         width: 100%;
+        max-width: 1300px;
+        margin: 0 auto;
+        box-sizing: border-box;
     }
 
     .about h2 {
@@ -195,6 +235,7 @@
         border-right: 4px solid #ffac46;
         border-bottom: 4px solid #0c59ff;
         border-top: 4px solid #0c59ff;
+        box-sizing: border-box;
     }
 
     .experience-card:last-child {
@@ -257,6 +298,7 @@
         border-bottom: 4px solid #0c59ff;
         border-top: 4px solid #0c59ff;
         transition: transform 0.3s ease;
+        box-sizing: border-box;
     }
 
     .hobby-card:hover {
@@ -302,6 +344,7 @@
         border-right: 4px solid #ffac46;
         border-bottom: 4px solid #0c59ff;
         border-top: 4px solid #0c59ff;
+        box-sizing: border-box;
     }
 
     .education-card:last-child {
@@ -340,9 +383,6 @@
     .education-card li:last-child {
         margin-bottom: 0;
     }
-.highlight-role {
-    color: #d4851a;
-}
 
 .travel-map {
     padding: 20px 100px;
@@ -355,4 +395,3 @@
     margin-top: 20px;
     border: 2px solid #1C539F;
 }
-

@@ -28,6 +28,13 @@
                     <img src="/static/img/logo.svg" />
                 </div>
             </a>
+            <nav class="nav-menu">
+                {% for nav_item in navigation %}
+                    <a href="{{ nav_item.url }}" class="nav-link {% if nav_item.active %}active{% endif %}">
+                        {{ nav_item.name }}
+                    </a>
+                {% endfor %}
+            </nav>
         </div>
     </header>
 

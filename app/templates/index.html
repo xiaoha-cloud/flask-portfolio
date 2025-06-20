@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+{% endblock %}
+
 {% block profile %}
 <div class="profile">
     <div id="profile-picture" class="profile-picture">
@@ -8,7 +13,6 @@
     <h1>{{ title }}</h1>
 </div>
 {% endblock %}
-
 
 {% block content %}
 <!-- About me -->
@@ -21,7 +25,6 @@
         </div>
     </div>
 </section>
-
 
 <!-- Work Experience -->
 <section class="hero">
@@ -107,23 +110,29 @@
                 {% endfor %}
             </div>
         </div>
+    </div>
+</section>
 
-
-    <!-- Coolmap -->
-    <section class="travel-map">
+<!-- Places I've Visited Map -->
+<section class="hero">
     <div class="hero-text">
         <div class="about">
             <h2>Places I've Visited</h2>
-            <div id="map"></div>
+            <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
         </div>
     </div>
 </section>
+
 <script>
+    // Initialize the map
     const map = L.map('map').setView([20, 0], 2);
 
+    // Add tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
+
+    // Location data
     const locations = [
         {
             name: "Paris, France",
@@ -146,7 +155,9 @@
             description: "Visited the Opera House and Bondi Beach"
         }
     ];
-        locations.forEach(location => {
+
+    // Add markers to the map
+    locations.forEach(location => {
         const marker = L.marker(location.coords).addTo(map)
             .bindTooltip(`
                 <div class="map-tooltip">
@@ -154,11 +165,12 @@
                     <span>${location.description}</span>
                 </div>
             `, {
-                permanent: true,  
+                permanent: false,  
                 direction: 'top', 
                 offset: [0, -20], 
                 className: 'custom-tooltip'
             });
+        
         marker.setIcon(
             L.icon({
                 iconUrl: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png',
@@ -168,10 +180,4 @@
         );
     });
 </script>
- 
-
-
-    </div>
-</section>
 {% endblock %}
-
