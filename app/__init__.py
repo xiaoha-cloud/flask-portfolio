@@ -5,13 +5,17 @@ from dotenv import load_dotenv
 load_dotenv()
 app = Flask(__name__)
 
-# Navigation menu structure
+base_url = "/" 
+
 navigation_items = [
-    {'name': 'Home', 'url': '/', 'active': False},
+    {'name': 'Home', 'url': base_url + '#profile', 'active': False},
+    {'name': 'Experience', 'url': base_url + '#work-experience', 'active': False},
+    {'name': 'Education', 'url': base_url + '#education', 'active': False},
     {'name': 'Hobbies', 'url': '/hobbies', 'active': False},
-    {'name': 'Experience', 'url': '/experience', 'active': False},
-    {'name': 'Visited Places', 'url': '/map', 'active': False},
+    {'name': 'Visited Places', 'url': base_url + '#visited-places', 'active': False},
 ]
+
+
 
 def get_navigation(current_page):
     nav_items = []

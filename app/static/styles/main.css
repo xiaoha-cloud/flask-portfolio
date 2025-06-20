@@ -408,3 +408,19 @@ body {
     color: #333;
     box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
+.nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000; 
+    width: 100%;
+    display: inline-block;
+    background-color: rgba(28, 83, 159, 0.9); 
+    font-family: "Roboto", serif;
+    font-weight: 700 !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    backdrop-filter: blur(8px); 
+    -webkit-backdrop-filter: blur(8px); 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+    transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+}
