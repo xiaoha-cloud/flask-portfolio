@@ -340,19 +340,28 @@
     .education-card li:last-child {
         margin-bottom: 0;
     }
-.highlight-role {
-    color: #d4851a;
-}
+    .highlight-role {
+        color: #d4851a;
+    }
 
-.travel-map {
-    padding: 20px 100px;
-    margin-bottom: 50px;
-}
+    .travel-map {
+        padding: 20px 100px;
+        margin-bottom: 50px;
+    }
 
-#map {
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-top: 20px;
-    border: 2px solid #1C539F;
-}
+    #map {
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-top: 20px;
+        border: 2px solid #1C539F;
+    }
+    .custom-tooltip {
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 10px;
+        color: #333;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
 
