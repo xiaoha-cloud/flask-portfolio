@@ -30,7 +30,28 @@ work_experiences = [
 ]
 
 # Education data structure - will be populated by other team members
-education = []
+education = [
+    {
+        "degree": "Master of Science in Software Engineering",
+        "school": "University of Technology",
+        "duration": "August 2077 - May 2077",
+        "achievements": [
+            "Specialized in Cloud Computing and Distributed Systems",
+            "Thesis: 'Optimizing Cloud-Based Data Processing for Large-Scale Applications'",
+            "Participated in various hackathons and coding competitions"
+        ]
+    },
+    {
+        "degree": "Bachelor of Science in Computer Science",
+        "school": "Tech University",
+        "duration": "August 1337 - May 1337",
+        "achievements": [
+            "Graduated with Honors",
+            "Relevant Coursework: Data Structures, Algorithms, Database Systems, Cloud Computing",
+            "Capstone Project: Developed a cloud-based application for real-time data analytics"
+        ]
+    }
+]
 
 hobbies = [
     {
