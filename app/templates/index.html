@@ -14,6 +14,7 @@
 </div>
 {% endblock %}
 
+
 {% block content %}
 <!-- About me -->
 <section class="hero">
@@ -25,6 +26,7 @@
         </div>
     </div>
 </section>
+
 
 <!-- Work Experience -->
 <section class="hero">
@@ -113,64 +115,41 @@
     </div>
 </section>
 
-<!-- Places I've Visited Map -->
+<!-- Places I've Visited -->
 <section class="hero">
     <div class="hero-text">
         <div class="about">
             <h2>Places I've Visited</h2>
-            <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+            <div id="map" style="height: 400px;"></div>
         </div>
     </div>
 </section>
 
+{% endblock %}
+
+{% block extra_scripts %}
 <script>
-    // Initialize the map
+document.addEventListener("DOMContentLoaded", () => {
     const map = L.map('map').setView([20, 0], 2);
 
-    // Add tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Location data
-    const locations = [
-        {
-            name: "Paris, France",
-            coords: [48.8566, 2.3522],
-            description: "Visited the Eiffel Tower and Louvre Museum"
-        },
-        {
-            name: "Tokyo, Japan",
-            coords: [35.6762, 139.6503],
-            description: "Explored Shibuya and enjoyed authentic sushi"
-        },
-        {
-            name: "New York, USA",
-            coords: [40.7128, -74.0060],
-            description: "Saw Times Square and Central Park"
-        },
-        {
-            name: "Sydney, Australia",
-            coords: [-33.8688, 151.2093],
-            description: "Visited the Opera House and Bondi Beach"
-        }
-    ];
+    const locations = {{ visited_locations|tojson|safe }};
 
-    // Add markers to the map
     locations.forEach(location => {
         const marker = L.marker(location.coords).addTo(map)
-            .bindTooltip(`
-                <div class="map-tooltip">
-                    <strong>${location.name}</strong><br>
-                    <span>${location.description}</span>
-                </div>
-            `, {
-                permanent: false,  
-                direction: 'top', 
-                offset: [0, -20], 
-                className: 'custom-tooltip'
-            });
-        
+            .bindTooltip(
+                `<strong>${location.name}</strong><br>${location.description}`,
+                {
+                    permanent: true,
+                    direction: 'top',
+                    offset: [0, -20],
+                    className: 'custom-tooltip'
+                }
+            );
+
         marker.setIcon(
             L.icon({
                 iconUrl: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png',
@@ -179,5 +158,6 @@
             })
         );
     });
+});
 </script>
 {% endblock %}

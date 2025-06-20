@@ -86,6 +86,34 @@ hobbies = [
         'icon_color': '#0c59ff'
     }
 ]
+visited_locations = [
+    {
+        "name": "Paris, France",
+        "coords": [48.8566, 2.3522],
+        "description": "Visited the Eiffel Tower and Louvre Museum"
+    },
+    {
+        "name": "Tokyo, Japan",
+        "coords": [35.6762, 139.6503],
+        "description": "Explored Shibuya and enjoyed authentic sushi"
+    },
+    {
+        "name": "New York, USA",
+        "coords": [40.7128, -74.0060],
+        "description": "Saw Times Square and Central Park"
+    },
+    {
+        "name": "Sydney, Australia",
+        "coords": [-33.8688, 151.2093],
+        "description": "Visited the Opera House and Bondi Beach"
+    },
+    {
+        "name": "Bermuda Triangle",
+        "coords": [25.0000, -71.0000],
+        "description": "Met some aliens and they were friendly! They even gave me a ride in their spaceship."
+    }
+]
+
 
 @app.route('/')
 def index():
@@ -98,7 +126,9 @@ def index():
                          work_experiences=work_experiences,
                          education=education,
                          hobbies=hobbies,
-                         navigation=get_navigation('/'))
+                         navigation=get_navigation('/'),
+                         visited_locations=visited_locations
+                         )
 
 @app.route('/hobbies')
 def hobbies_page():
