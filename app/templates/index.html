@@ -16,6 +16,15 @@
 
     <link lang='sass' rel="stylesheet" href="./static/styles/main.css">
     <link rel='icon' href='./static/img/favicon.ico' type='image/x-icon' />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <style>
+        #map { height: 500px; }
+    </style>
     <title>{{ title }}</title>
 </head>
 
@@ -49,6 +58,67 @@
             </div>
         </div>
     </section>
+
+    <!-- Coolmap -->
+    <section class="travel-map">
+    <div class="hero-text">
+        <div class="about">
+            <h2>Places I've Visited</h2>
+            <div id="map"></div>
+        </div>
+    </div>
+</section>
+<script>
+    const map = L.map('map').setView([20, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    const locations = [
+        {
+            name: "Paris, France",
+            coords: [48.8566, 2.3522],
+            description: "Visited the Eiffel Tower and Louvre Museum"
+        },
+        {
+            name: "Tokyo, Japan",
+            coords: [35.6762, 139.6503],
+            description: "Explored Shibuya and enjoyed authentic sushi"
+        },
+        {
+            name: "New York, USA",
+            coords: [40.7128, -74.0060],
+            description: "Saw Times Square and Central Park"
+        },
+        {
+            name: "Sydney, Australia",
+            coords: [-33.8688, 151.2093],
+            description: "Visited the Opera House and Bondi Beach"
+        }
+    ];
+        locations.forEach(location => {
+        const marker = L.marker(location.coords).addTo(map)
+            .bindTooltip(`
+                <div class="map-tooltip">
+                    <strong>${location.name}</strong><br>
+                    <span>${location.description}</span>
+                </div>
+            `, {
+                permanent: true,  
+                direction: 'top', 
+                offset: [0, -20], 
+                className: 'custom-tooltip'
+            });
+        marker.setIcon(
+            L.icon({
+                iconUrl: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png',
+                iconSize: [32, 32],
+                iconAnchor: [16, 32]
+            })
+        );
+    });
+</script>
+ 
 
 
 </body>
