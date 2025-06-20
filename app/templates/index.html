@@ -9,6 +9,17 @@
 </div>
 {% endblock %}
 
+
+{% block content %}
+<!-- About me -->
+<section class="hero">
+    <div class="hero-text">
+        <div class="about">
+            <h2>Hi</h2>
+            <h1>I'm <span class="highlight">{{ name }}</span><br />a <span class="highlight-role">{{ role }}</span></h1>
+            <p>{{ about_text }}</p>
+
+
 {% block content %}
 <!-- About me -->
 <section class="hero">
@@ -40,9 +51,28 @@
                 </div>
                 {% endfor %}
             </div>
+
         </div>
     </div>
 </section>
+
+
+<!-- Work Experience -->
+<section class="hero">
+    <div class="hero-text">
+        <div class="about work-section">
+            <h2>Work Experience</h2>
+            <div class="experience-container">
+                {% for experience in work_experiences %}
+                <div class="experience-card">
+                    <h3>{{ experience.title }}</h3>
+                    <div class="company">{{ experience.company }}</div>
+                    <div class="duration">{{ experience.duration }}</div>
+                    <ul>
+                        {% for achievement in experience.achievements %}
+                        <li>{{ achievement }}</li>
+                        {% endfor %}
+                    </ul>
 
 <!-- Education -->
 <section class="hero">
@@ -62,6 +92,7 @@
                         {% endfor %}
                     </ul>
                     {% endif %}
+
                 </div>
                 {% endfor %}
             </div>
