@@ -121,11 +121,7 @@ body {
     background: white;
     padding: 40px;
     border-radius: 8px;
-<<<<<<< HEAD
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-=======
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
->>>>>>> main
     border-left: 4px solid #ffac46;
     border-right: 4px solid #ffac46;
     border-bottom: 4px solid #0c59ff;
@@ -219,4 +215,111 @@ body {
     margin-bottom: 0;
 =======
 >>>>>>> main
+}
+
+/* Work Experience Section */
+.work-section {
+    margin-top: 20px;
+}
+
+.experience-container {
+    margin-top: 30px;
+}
+
+.experience-card {
+    background: white;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #ffac46;
+    border-right: 4px solid #ffac46;
+    border-bottom: 4px solid #0c59ff;
+    border-top: 4px solid #0c59ff;
+}
+
+.experience-card:last-child {
+    margin-bottom: 0;
+}
+
+.experience-card h3 {
+    color: #1C539F;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.experience-card .company {
+    color: #d4851a;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.experience-card .duration {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.experience-card ul {
+    color: #000000;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.experience-card li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.experience-card li:last-child {
+    margin-bottom: 0;
+}
+
+/* Hobbies Section Styling */
+.hobbies-section {
+    margin-top: 20px;
+}
+
+.hobbies-container {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.hobby-card {
+    background: white;
+    padding: 25px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #ffac46;
+    border-right: 4px solid #ffac46;
+    border-bottom: 4px solid #0c59ff;
+    border-top: 4px solid #0c59ff;
+    transition: transform 0.3s ease;
+}
+
+.hobby-card:hover {
+    transform: translateY(-5px);
+}
+
+.hobby-card svg {
+    margin-bottom: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hobby-card h3 {
+    color: #1C539F;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.hobby-card p {
+    color: #000000;
+    line-height: 1.6;
+    margin: 0;
 }
