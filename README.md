@@ -1,51 +1,47 @@
 # Production Engineering - Week 1 - Portfolio Site
 
-Welcome to the MLH Fellowship! During Week 1, you'll be using Flask to build a portfolio site. This site will be the foundation for activities we do in future weeks so spend time this week making it your own and reflect your personality!
+# MLH Fellowship - Week 1 Portfolio Site
 
-## Tasks
+Welcome to the MLH Fellowship! In **Week 1**, you'll build a personal portfolio site using **Flask**. This project is your foundation for future activities—so make it reflect **you**!
 
-Once you've got your portfolio downloaded and running using the instructions below, you should attempt to complete the following tasks.
+---
 
-For each of these tasks, you should create an [Issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues) and work on them in a new [branch](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches). When the task has been completed, you should open a [Pull Request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) and get another fellow in your pod to give you feedback before merging it in.
-
-*Note: Make sure to include a link to the Issue you're progressing on inside of your Pull Request so your reviewer knows what you're progressing on!*
+## Tasks Completed
 
 ### GitHub Tasks
-- [x] Create Issues for each task below
-- [x] Progress on each task in a new branch
-- [x] Open a Pull Request when a task is finished to get feedback
+- Created Issues for each portfolio task
+- Created new branches for each task
+- Opened Pull Requests for completed tasks and received peer feedback
 
-### Portfolio Tasks
-- [x] Add a photo of yourself to the website
-- [x] Add an "About youself" section to the website.
-- [x] Add your previous work experiences
-- [x] Add your hobbies (including images)
-- [x] Add your current/previous education
-- [x] Add a map of all the cool locations/countries you visited
+### Portfolio Content Tasks
+- Added a photo of myself
+- Created an "About Me" section
+- Listed previous work experiences
+- Highlighted hobbies with images
+- Shared current and past education
+- Embedded a map of locations/countries I've visited
 
-### Flask Tasks
-- [x] Get your Flask app running locally on your machine using the instructions below.
-- [x] Add a template for adding multiple work experiences/education/hobbies using [Jinja](https://jinja.palletsprojects.com/en/3.0.x/api/#basics)
-- [x] Create a new page to display hobbies.
-- [x] Add a menu bar that dynamically displays other pages in the app
+### Flask Development Tasks
+- Successfully ran Flask app locally
+- Used Jinja templates for dynamic sections (work experience, education, hobbies)
+- Created a separate page for hobbies
+- Implemented a dynamic navigation menu
 
+---
 
 ## Getting Started
 
-You need to do all your progress here.
+### Installation
 
-## Installation
+Ensure you have **Python 3** and **pip** installed.
 
-Make sure you have python3 and pip installed
-
-Create and activate virtual environment using virtualenv
+Create and activate a virtual environment:
 ```bash
 $ python -m venv python3-virtualenv
 $ source python3-virtualenv/bin/activate
 ```
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install all dependencies!
-
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install all dependencies
 ```bash
 pip install -r requirements.txt
 ```
@@ -70,10 +66,30 @@ You should get a response like this in the terminal:
 
 You'll now be able to access the website at `localhost:5000` or `127.0.0.1:5000` in the browser! 
 
-*Note: The portfolio site will only work on your local machine while you have it running inside of your terminal. We'll go through how to host it in the cloud in the next few weeks!* 
+## Technology Stack
+- Backend: Python, Flask
+- Templating: Jinja2
+- Frontend: HTML, CSS, JavaScript, Leaflet.js
+- Version Control: Git + GitHub
+- Dev Environment: Virtualenv, dotenv
 
-## Contributing
+## Contributions
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Thanks to the following fellows for their contributions to the portfolio project:
 
-Please make sure to update tests as appropriate.
+### ace-perez
+- Added a photo to the website
+- Created the "About Yourself" section
+- Implemented a dynamic menu bar to display other pages
+
+### Xiaoha-cloud
+- Added previous work experiences
+- Added hobbies with images
+- Built Jinja templates for dynamic rendering of experiences/education/hobbies
+- Created a new hobbies page
+
+### AyanMulla09
+- Added current and previous education
+- Embedded a map of all visited locations/countries
+- Wrote and updated this README
+
