@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+echo "Killing all tmux sessions..."
+tmux ls 2>/dev/null | awk -F: '{print $1}' | xargs -r -I {} tmux kill-session -t {}
+
+echo "Going to project directory..."
+cd ~/flask-portfolio
+
+echo "Pulling latest code from GitHub..."
+git fetch && git reset origin/main --hard
+
+echo "Activating virtual environment..."
+source venv/bin/activate  # Ensure this venv exists; or adjust path
+
+echo "Installing dependencies..."
+pip install -r requirements.txt
+
+echo "Starting Flask app in tmux (detached)..."
+tmux new-session -d -s flask_server "cd ~/flask-portfolio && source venv/bin/activate && flask run --host=0.0.0.0 --port=5000"
+
+echo "Site redeployed successfully!"
