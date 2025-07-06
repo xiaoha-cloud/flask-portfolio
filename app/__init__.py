@@ -144,18 +144,3 @@ def hobbies_page():
                          hobbies=hobbies,
                          navigation=get_navigation('/hobbies'))
 
-@app.route('/experience')
-def experience_page():  # Changed from hobbies_page
-    return render_template('experience.html',
-                         title="My Experience",
-                         url=os.getenv("URL"),
-                         work_experiences=work_experiences,  # Pass correct data
-                         navigation=get_navigation('/experience'))
-
-@app.route('/map')
-def map_page():  # Changed from hobbies_page
-    return render_template('map.html',
-                         title="Places I've Visited",
-                         url=os.getenv("URL"),
-                         visited_locations=visited_locations,  # Pass correct data
-                         navigation=get_navigation('/map'))
