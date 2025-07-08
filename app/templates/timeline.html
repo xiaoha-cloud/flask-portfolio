@@ -52,7 +52,6 @@
         function RotateLeft(lValue, iShiftBits) {
             return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
         }
-
         function AddUnsigned(lX, lY) {
             var lX4, lY4, lX8, lY8, lResult;
             lX8 = (lX & 0x80000000);
@@ -73,32 +72,26 @@
                 return (lResult ^ lX8 ^ lY8);
             }
         }
-
         function F(x, y, z) { return (x & y) | ((~x) & z); }
         function G(x, y, z) { return (x & z) | (y & (~z)); }
         function H(x, y, z) { return (x ^ y ^ z); }
         function I(x, y, z) { return (y ^ (x | (~z))); }
-
         function FF(a, b, c, d, x, s, ac) {
             a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
             return AddUnsigned(RotateLeft(a, s), b);
         }
-
         function GG(a, b, c, d, x, s, ac) {
             a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
             return AddUnsigned(RotateLeft(a, s), b);
         }
-
         function HH(a, b, c, d, x, s, ac) {
             a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
             return AddUnsigned(RotateLeft(a, s), b);
         }
-
         function II(a, b, c, d, x, s, ac) {
             a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
             return AddUnsigned(RotateLeft(a, s), b);
         }
-
         function ConvertToWordArray(string) {
             var lWordCount;
             var lMessageLength = string.length;
@@ -121,7 +114,6 @@
             lWordArray[lNumberOfWords - 1] = lMessageLength >>> 29;
             return lWordArray;
         }
-
         function WordToHex(lValue) {
             var WordToHexValue = "", WordToHexValue_temp = "", lByte, lCount;
             for (lCount = 0; lCount <= 3; lCount++) {
@@ -131,14 +123,11 @@
             }
             return WordToHexValue;
         }
-
         function Utf8Encode(string) {
             string = string.replace(/\r\n/g, "\n");
             var utftext = "";
-
             for (var n = 0; n < string.length; n++) {
                 var c = string.charCodeAt(n);
-
                 if (c < 128) {
                     utftext += String.fromCharCode(c);
                 }
@@ -152,21 +141,17 @@
                     utftext += String.fromCharCode((c & 63) | 128);
                 }
             }
-
             return utftext;
         }
-
         var x = Array();
         var k, AA, BB, CC, DD, a, b, c, d;
         var S11 = 7, S12 = 12, S13 = 17, S14 = 22;
         var S21 = 5, S22 = 9, S23 = 14, S24 = 20;
         var S31 = 4, S32 = 11, S33 = 16, S34 = 23;
         var S41 = 6, S42 = 10, S43 = 15, S44 = 21;
-
         string = Utf8Encode(string);
         x = ConvertToWordArray(string);
         a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
-
         for (k = 0; k < x.length; k += 16) {
             AA = a; BB = b; CC = c; DD = d;
             a = FF(a, b, c, d, x[k + 0], S11, 0xD76AA478);
@@ -238,26 +223,21 @@
             c = AddUnsigned(c, CC);
             d = AddUnsigned(d, DD);
         }
-
         var temp = WordToHex(a) + WordToHex(b) + WordToHex(c) + WordToHex(d);
         return temp.toLowerCase();
     }
-
-    // Timeline functionality
+    // Load timeline posts from the API and render them
     function loadTimelinePosts() {
         fetch('/api/timeline_post')
             .then(response => response.json())
             .then(posts => {
                 const postsContainer = document.getElementById('timeline-posts');
                 if (!postsContainer) return;
-
                 postsContainer.innerHTML = '';
-
                 if (posts.length === 0) {
                     postsContainer.innerHTML = '<p class="no-posts">No posts yet. Be the first to create one!</p>';
                     return;
                 }
-
                 posts.forEach(post => {
                     const postElement = createPostElement(post);
                     postsContainer.appendChild(postElement);
@@ -267,17 +247,14 @@
                 console.error('Error:', error);
             });
     }
-
+    // Create a DOM element for a timeline post
     function createPostElement(post) {
         const postDiv = document.createElement('div');
         postDiv.className = 'timeline-post';
-
-        // Create Gravatar URL
+        // Generate Gravatar URL
         const emailHash = md5(post.email.toLowerCase().trim());
         const gravatarUrl = `https://www.gravatar.com/avatar/${emailHash}?d=identicon&s=64`;
-
         const createdDate = new Date(post.created_at).toLocaleString();
-
         postDiv.innerHTML = `
         <div class="post-header">
             <img src="${gravatarUrl}" alt="Profile" class="post-avatar">
@@ -292,10 +269,9 @@
         </div>
         <button onclick="deletePost(${post.id})" class="delete-btn">Delete</button>
     `;
-
         return postDiv;
     }
-
+    // Delete a timeline post by ID
     function deletePost(postId) {
         if (confirm('Are you sure you want to delete this post?')) {
             fetch(`/api/timeline_post/${postId}`, {
@@ -315,23 +291,19 @@
                 });
         }
     }
-
     // Initialize timeline when DOM is loaded
     document.addEventListener('DOMContentLoaded', function () {
         // Load timeline posts
         loadTimelinePosts();
-
         // Handle timeline form submission
         const timelineForm = document.getElementById('timeline-form');
         if (timelineForm) {
             timelineForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-
                 const formData = new FormData();
                 formData.append('name', document.getElementById('name').value);
                 formData.append('email', document.getElementById('email').value);
                 formData.append('content', document.getElementById('content').value);
-
                 fetch('/api/timeline_post', {
                     method: 'POST',
                     body: formData
