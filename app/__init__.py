@@ -1,9 +1,40 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
+from peewee import *
+import datetime
+from playhouse.shortcuts import model_to_dict
 
 load_dotenv()
 app = Flask(__name__)
+
+# Database connection
+db = MySQLDatabase(
+    os.getenv("MYSQL_DATABASE", "myportfoliodb"),
+    user=os.getenv("MYSQL_USER", "myportfolio"),
+    password=os.getenv("MYSQL_PASSWORD", "mypassword"),
+    host=os.getenv("MYSQL_HOST", "localhost"),
+    port=3306
+)
+
+# TimelinePost model definition
+class TimelinePost(Model):
+    name = CharField()
+    email = CharField()
+    content = TextField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = db
+
+# Connect and create table if not exists
+try:
+    db.connect()
+    db.create_tables([TimelinePost], safe=True)
+    print(f"Database connection successful: {db}")
+    db.close()
+except Exception as e:
+    print(f"Database connection failed: {e}")
 
 base_url = "/" 
 
@@ -159,3 +190,34 @@ def map_page():  # Changed from hobbies_page
                          url=os.getenv("URL"),
                          visited_locations=visited_locations,  # Pass correct data
                          navigation=get_navigation('/map'))
+
+# POST endpoint to create a timeline post
+@app.route('/api/timeline_post', methods=['POST'])
+def post_timeline_post():
+    name = request.form.get('name')
+    email = request.form.get('email')
+    content = request.form.get('content')
+    if not name or not email or not content:
+        return jsonify({'error': 'Missing required fields'}), 400
+    timeline_post = TimelinePost.create(
+        name=name,
+        email=email,
+        content=content
+    )
+    return model_to_dict(timeline_post), 201
+
+# GET endpoint to retrieve all timeline posts
+@app.route('/api/timeline_post', methods=['GET'])
+def get_timeline_post():
+    posts = TimelinePost.select().order_by(TimelinePost.created_at.desc())
+    return jsonify([model_to_dict(post) for post in posts])
+
+# DELETE endpoint to delete a timeline post by id
+@app.route('/api/timeline_post/<int:post_id>', methods=['DELETE'])
+def delete_timeline_post(post_id):
+    query = TimelinePost.delete().where(TimelinePost.id == post_id)
+    deleted = query.execute()
+    if deleted:
+        return jsonify({'result': 'Deleted'}), 200
+    else:
+        return jsonify({'error': 'Not found'}), 404
