@@ -43,6 +43,7 @@ navigation_items = [
     {'name': 'Experience', 'url': base_url + '#work-experience', 'active': False},
     {'name': 'Education', 'url': base_url + '#education', 'active': False},
     {'name': 'Hobbies', 'url': '/hobbies', 'active': False},
+    {'name': 'Timeline', 'url': '/timeline', 'active': False},
     {'name': 'Visited Places', 'url': base_url + '#visited-places', 'active': False},
 ]
 
@@ -190,6 +191,13 @@ def map_page():  # Changed from hobbies_page
                          url=os.getenv("URL"),
                          visited_locations=visited_locations,  # Pass correct data
                          navigation=get_navigation('/map'))
+
+@app.route('/timeline')
+def timeline_page():
+    return render_template('timeline.html',
+                         title="Timeline",
+                         url=os.getenv("URL"),
+                         navigation=get_navigation('/timeline'))
 
 # POST endpoint to create a timeline post
 @app.route('/api/timeline_post', methods=['POST'])
