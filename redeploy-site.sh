@@ -16,6 +16,9 @@ cd ~/flask-portfolio || {
     exit 1
 }
 
+echo "Current git remote:"
+git remote -v
+
 # Step 3: Update git repository with latest changes
 echo "Fetching and resetting to latest changes from GitHub..."
 git fetch && git reset origin/main --hard || {
@@ -37,12 +40,7 @@ pip install -r requirements.txt || {
 
 # Step 5: Start new detached tmux session with Flask server
 echo "Starting Flask server in new tmux session..."
-tmux new-session -d -s flask-server -c ~/flask-portfolio << EOF
-source python3-virtualenv/bin/activate
-export FLASK_APP=app
-export FLASK_ENV=production
-python -m flask run --host=0.0.0.0 --port=5000
-EOF
+tmux new-session -d -s flask-server "bash ~/flask-portfolio/start-flask.sh"
 
 # Wait a moment for the server to start
 sleep 3
