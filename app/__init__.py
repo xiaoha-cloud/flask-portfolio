@@ -1,11 +1,36 @@
 import os
+import datetime
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
+from peewee import CharField, TextField, DateTimeField, MySQLDatabase, DoesNotExist
+from playhouse.shortcuts import model_to_dict
 
 load_dotenv()
 app = Flask(__name__)
 
-base_url = "/" 
+base_url = "/"
+
+mydb = MySQLDatabase(
+    os.getenv("MYSQL_DATABASE"),
+    user=os.getenv("MYSQL_USER"),
+    password=os.getenv("MYSQL_PASSWORD"),
+    host=os.getenv("MYSQL_HOST"),
+    port=3306
+)
+
+print(mydb)
+
+class TimelinePost(mydb.Model):
+    name = CharField()
+    email = CharField()
+    content = TextField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = mydb
+
+mydb.connect()
+mydb.create_tables([TimelinePost])
 
 navigation_items = [
     {'name': 'Home', 'url': base_url + '#profile', 'active': False},
@@ -159,3 +184,45 @@ def map_page():  # Changed from hobbies_page
                          url=os.getenv("URL"),
                          visited_locations=visited_locations,  # Pass correct data
                          navigation=get_navigation('/map'))
+
+@app.route('/api/timeline_post', methods=['POST'])
+def timeline_post():
+    name = request.form.get('name')
+    email = request.form.get('email')
+    content = request.form.get('content')
+    timeline_post = TimelinePost.create(name=name, email=email, content=content)
+
+    return model_to_dict(timeline_post)
+
+@app.route('/api/timeline_posts', methods=['GET'])
+def get_timeline_posts():
+    return{
+        'timeline_posts': [
+            model_to_dict(p)
+            for p in TimelinePost.select().order_by(TimelinePost.created_at.desc())
+        ]
+    }
+@app.route('/api/timeline_post/<int:post_id>', methods=['DELETE'])
+def delete_timeline_post(post_id):
+    try:
+        post = TimelinePost.get(TimelinePost.id == post_id)
+
+        post.delete_instance()
+
+        return {
+            'message': f'Timeline post {post_id} deleted successfully',
+            'deleted_id': post_id
+        }, 200
+
+    except TimelinePost.DoesNotExist:
+        return {
+            'error': f'Timeline post with ID {post_id} not found'
+        }, 404
+    except Exception as e:
+        return {
+            'error': f'Failed to delete timeline post: {str(e)}'
+        }, 500
+
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5001, host='0.0.0.0')
