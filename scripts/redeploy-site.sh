@@ -18,6 +18,6 @@ echo "Installing dependencies..."
 pip install -r requirements.txt
 
 echo "Starting Flask app in tmux (detached)..."
-tmux new-session -d -s flask_server "cd ~/flask-portfolio && source venv/bin/activate && flask run --host=0.0.0.0 --port=5000"
+tmux new-session -d -s flask_server "cd ~/flask-portfolio && source venv/bin/activate && flask run --host=0.0.0.0 --port=5001"
 
 echo "Site redeployed successfully!"

@@ -2,7 +2,7 @@ import os
 import datetime
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
-from peewee import CharField, TextField, DateTimeField, MySQLDatabase
+from peewee import CharField, TextField, DateTimeField, MySQLDatabase, DoesNotExist
 from playhouse.shortcuts import model_to_dict
 
 load_dotenv()
@@ -202,3 +202,23 @@ def get_timeline_posts():
             for p in TimelinePost.select().order_by(TimelinePost.created_at.desc())
         ]
     }
+@app.route('/api/timeline_post/<int:post_id>', methods=['DELETE'])
+def delete_timeline_post(post_id):
+    try:
+        post = TimelinePost.get(TimelinePost.id == post_id)
+
+        post.delete_instance()
+        
+        return {
+            'message': f'Timeline post {post_id} deleted successfully',
+            'deleted_id': post_id
+        }, 200
+        
+    except TimelinePost.DoesNotExist:
+        return {
+            'error': f'Timeline post with ID {post_id} not found'
+        }, 404
+    except Exception as e:
+        return {
+            'error': f'Failed to delete timeline post: {str(e)}'
+        }, 500
