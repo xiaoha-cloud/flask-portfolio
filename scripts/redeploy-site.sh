@@ -12,7 +12,7 @@ echo "Pulling latest code from GitHub..."
 git fetch && git reset origin/main --hard
 
 echo "Activating virtual environment..."
-source venv/bin/activate
+source python3-virtualenv/bin/activate
 
 echo "Installing dependencies..."
 pip install -r requirements.txt
