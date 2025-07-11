@@ -208,12 +208,12 @@ def delete_timeline_post(post_id):
         post = TimelinePost.get(TimelinePost.id == post_id)
 
         post.delete_instance()
-        
+
         return {
             'message': f'Timeline post {post_id} deleted successfully',
             'deleted_id': post_id
         }, 200
-        
+
     except TimelinePost.DoesNotExist:
         return {
             'error': f'Timeline post with ID {post_id} not found'
@@ -222,3 +222,7 @@ def delete_timeline_post(post_id):
         return {
             'error': f'Failed to delete timeline post: {str(e)}'
         }, 500
+
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5001, host='0.0.0.0')
