@@ -1,6 +1,9 @@
 import os
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
+from peewee import MySQLDatabase, Model, CharField, TextField, DateTimeField, DoesNotExist
+from playhouse.shortcuts import model_to_dict
+import datetime
 
 load_dotenv()
 app = Flask(__name__)
@@ -15,7 +18,31 @@ navigation_items = [
     {'name': 'Visited Places', 'url': base_url + '#visited-places', 'active': False},
 ]
 
+mydb = MySQLDatabase(os.getenv("MYSQL_DATABASE"),
+                     user= os.getenv("MYSQL_USER"),
+                     password=os.getenv("MYSQL_PASSWORD"),
+                     host=os.getenv("MYSQL_HOST"),
+                        port=3306)
+print(mydb)
 
+from peewee import AutoField
+
+# Import the model-specific DoesNotExist exception for TimelinePost
+TimelinePostDoesNotExist = type('TimelinePost', (object,), {})
+
+
+class TimelinePost(Model):
+    id = AutoField()
+    name = CharField()
+    email = CharField()
+    content = TextField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+    class Meta:
+        database = mydb
+
+mydb.connect()
+mydb.create_tables([TimelinePost], safe=True)
+                       
 
 def get_navigation(current_page):
     nav_items = []
@@ -144,3 +171,30 @@ def hobbies_page():
                          hobbies=hobbies,
                          navigation=get_navigation('/hobbies'))
 
+@app.route('/api/timeline', methods=['POST'])
+def post_timeline():
+
+    name = request.form.get('name')
+    email = request.form.get('email')
+    content = request.form.get('content')
+    print(name, email, content)
+
+    post = TimelinePost.create(name=name, email=email, content=content)
+    return model_to_dict(post), 201
+
+@app.route('/api/timeline', methods=['GET'])
+def get_timeline():
+    return {
+        'posts': [model_to_dict(p) for p in TimelinePost.select().order_by(TimelinePost.created_at.desc())]
+    }
+    
+# curl --request POST http://localhost:5000/api/timeline -d 'name=Luke&email=luke@gmail.com&content=Hello, this is a test post!'
+
+@app.route('/api/timeline/<int:post_id>', methods=['DELETE'])
+def delete_timeline(post_id):
+    try:
+        post = TimelinePost.get(TimelinePost.id == post_id)
+        post.delete_instance()
+        return '', 204
+    except DoesNotExist:
+        return {'error': 'Post not found'}, 404
