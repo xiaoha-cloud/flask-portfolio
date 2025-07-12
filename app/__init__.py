@@ -16,6 +16,7 @@ navigation_items = [
     {'name': 'Education', 'url': base_url + '#education', 'active': False},
     {'name': 'Hobbies', 'url': '/hobbies', 'active': False},
     {'name': 'Visited Places', 'url': base_url + '#visited-places', 'active': False},
+    {'name': 'Timeline', 'url': '/timeline', 'active': False}
 ]
 
 mydb = MySQLDatabase(os.getenv("MYSQL_DATABASE"),
@@ -198,3 +199,12 @@ def delete_timeline(post_id):
         return '', 204
     except DoesNotExist:
         return {'error': 'Post not found'}, 404
+    
+@app.route('/timeline')
+def timeline():
+    return render_template(
+        'timeline.html',
+        title="Timeline",
+        url=os.getenv("URL"),
+        navigation=get_navigation('/timeline')
+    )

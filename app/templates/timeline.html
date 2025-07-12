@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}My Timeline{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-text">
+    <div class="about timeline-section">
+      <h2>My Timeline</h2>
+
+      <!-- Form -->
+      <form id="timeline-form" class="timeline-form">
+        <input type="text" name="name" placeholder="Your name" required />
+        <input type="email" name="email" placeholder="Your email" required />
+        <textarea name="content" placeholder="Write something..." required></textarea>
+        <button type="submit">Post</button>
+      </form>
+
+      <!-- Timeline Container -->
+      <div id="timeline-posts" class="timeline-container"></div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script>
+  const form = document.getElementById('timeline-form');
+  const postsContainer = document.getElementById('timeline-posts');
+
+  function md5(str) {
+    return CryptoJS.MD5(str.trim().toLowerCase()).toString();
+  }
+
+  function getGravatar(email) {
+    const hash = md5(email);
+    return `https://www.gravatar.com/avatar/${hash}?d=identicon`;
+  }
+
+  async function loadPosts() {
+    const res = await fetch('/api/timeline');
+    const data = await res.json();
+    postsContainer.innerHTML = '';
+
+    data.posts.forEach(post => {
+      const postDiv = document.createElement('div');
+      postDiv.className = 'timeline-post';
+
+      postDiv.innerHTML = `
+        <div class="timeline-avatar">
+          <img src="${getGravatar(post.email)}" alt="avatar">
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-meta">
+            <span class="timeline-name">${post.name}</span>
+            <span class="timeline-date">${new Date(post.created_at).toLocaleString()}</span>
+          </div>
+          <div class="timeline-text">${post.content}</div>
+        </div>
+      `;
+
+      postsContainer.appendChild(postDiv);
+    });
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const encoded = new URLSearchParams(formData);
+
+    const res = await fetch('/api/timeline', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: encoded
+    });
+
+    if (res.ok) {
+      form.reset();
+      loadPosts();
+    } else {
+      alert('Failed to submit post');
+    }
+  });
+
+  loadPosts();
+</script>
+{% endblock %}
