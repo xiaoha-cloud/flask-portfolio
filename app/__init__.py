@@ -38,6 +38,7 @@ navigation_items = [
     {'name': 'Education', 'url': base_url + '#education', 'active': False},
     {'name': 'Hobbies', 'url': '/hobbies', 'active': False},
     {'name': 'Visited Places', 'url': base_url + '#visited-places', 'active': False},
+    {'name': 'Timeline', 'url': '/timeline', 'active': False},
 ]
 
 
@@ -223,6 +224,11 @@ def delete_timeline_post(post_id):
             'error': f'Failed to delete timeline post: {str(e)}'
         }, 500
 
+@app.route('/timeline')
+def timeline_page():
+    return render_template('timeline.html',
+                         title="Timeline",
+                        navigation=get_navigation('/timeline'),)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001, host='0.0.0.0')
