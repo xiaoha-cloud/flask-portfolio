@@ -9,7 +9,7 @@ echo "Going to project directory..."
 cd ~/flask-portfolio
 
 echo "Pulling latest code from GitHub..."
-#git fetch && git reset origin/main --hard
+git fetch && git reset origin/main --hard
 
 echo "Activating virtual environment..."
 source python3-virtualenv/bin/activate
