@@ -2,7 +2,7 @@ import os
 import datetime
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
-from peewee import CharField, TextField, DateTimeField, MySQLDatabase, DoesNotExist
+from peewee import CharField, TextField, DateTimeField, MySQLDatabase, DoesNotExist, Model
 from playhouse.shortcuts import model_to_dict
 
 load_dotenv()
@@ -18,16 +18,16 @@ mydb = MySQLDatabase(
     port=3306
 )
 
-print(mydb)
+class BaseModel(Model):
+    class Meta:
+        database = mydb
 
-class TimelinePost(mydb.Model):
+class TimelinePost(BaseModel):
     name = CharField()
     email = CharField()
     content = TextField()
     created_at = DateTimeField(default=datetime.datetime.now)
 
-    class Meta:
-        database = mydb
 
 mydb.connect()
 mydb.create_tables([TimelinePost])

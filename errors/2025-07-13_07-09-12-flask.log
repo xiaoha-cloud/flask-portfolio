@@ -1,0 +1,16 @@
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+Usage: flask run [OPTIONS]
+Try 'flask run --help' for help.
+
+Error: While importing 'app', an ImportError was raised:
+
+Traceback (most recent call last):
+  File "/root/flask-portfolio/python3-virtualenv/lib64/python3.9/site-packages/flask/cli.py", line 256, in locate_app
+    __import__(module_name)
+  File "/root/flask-portfolio/app/__init__.py", line 5, in <module>
+    from peewee import CharField, TextField, DateTimeField, MySQLDatabase, DoesNotExist, Modelt
+ImportError: cannot import name 'Modelt' from 'peewee' (/root/flask-portfolio/python3-virtualenv/lib64/python3.9/site-packages/peewee.py)
+
