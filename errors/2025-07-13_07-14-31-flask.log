@@ -1,0 +1,31 @@
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://144.126.199.192:5001/ (Press CTRL+C to quit)
+80.194.54.138 - - [13/Jul/2025 07:14:54] "GET / HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:14:54] "GET /static/styles/main.css HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:14:54] "GET /static/img/logo.svg HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:14:54] "GET /static/img/logo.jpg HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:14:55] "GET /static/img/favicon.ico HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:14:57] "GET /timeline HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:14:57] "[36mGET /static/styles/main.css HTTP/1.1[0m" 304 -
+80.194.54.138 - - [13/Jul/2025 07:14:57] "[36mGET /static/img/logo.svg HTTP/1.1[0m" 304 -
+80.194.54.138 - - [13/Jul/2025 07:14:57] "GET /api/timeline_posts HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:15:02] "GET / HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:15:02] "[36mGET /static/styles/main.css HTTP/1.1[0m" 304 -
+80.194.54.138 - - [13/Jul/2025 07:15:02] "[36mGET /static/img/logo.svg HTTP/1.1[0m" 304 -
+80.194.54.138 - - [13/Jul/2025 07:15:02] "[36mGET /static/img/logo.jpg HTTP/1.1[0m" 304 -
+80.194.54.138 - - [13/Jul/2025 07:15:03] "GET /hobbies HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:15:03] "[36mGET /static/styles/main.css HTTP/1.1[0m" 304 -
+80.194.54.138 - - [13/Jul/2025 07:15:03] "[36mGET /static/img/logo.svg HTTP/1.1[0m" 304 -
+80.194.54.138 - - [13/Jul/2025 07:15:04] "GET /timeline HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:15:04] "[36mGET /static/styles/main.css HTTP/1.1[0m" 304 -
+80.194.54.138 - - [13/Jul/2025 07:15:04] "[36mGET /static/img/logo.svg HTTP/1.1[0m" 304 -
+80.194.54.138 - - [13/Jul/2025 07:15:04] "GET /api/timeline_posts HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:15:05] "GET / HTTP/1.1" 200 -
+80.194.54.138 - - [13/Jul/2025 07:15:05] "[36mGET /static/styles/main.css HTTP/1.1[0m" 304 -
+80.194.54.138 - - [13/Jul/2025 07:15:05] "[36mGET /static/img/logo.svg HTTP/1.1[0m" 304 -
+80.194.54.138 - - [13/Jul/2025 07:15:05] "[36mGET /static/img/logo.jpg HTTP/1.1[0m" 304 -

@@ -2,7 +2,7 @@ import os
 import datetime
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
-from peewee import CharField, TextField, DateTimeField, MySQLDatabase, DoesNotExist
+from peewee import CharField, TextField, DateTimeField, MySQLDatabase, DoesNotExist, Model
 from playhouse.shortcuts import model_to_dict
 
 load_dotenv()
