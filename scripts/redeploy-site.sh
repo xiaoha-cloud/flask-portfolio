@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOGFILE="errors/\$(date +\"%Y-%m-%d_%H-%M-%S\")"
+LOGFILE="errors/\$(date +\'%Y-%m-%d_%H-%M-%S\')"
 
 echo "Going to project directory..."
 cd ~/flask-portfolio
