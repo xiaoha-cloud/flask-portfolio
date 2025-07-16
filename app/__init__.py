@@ -35,9 +35,20 @@ try:
     db.connect()
     db.create_tables([TimelinePost], safe=True)
     print(f"Database connection successful: {db}")
-    db.close()
+    # db.close()  # Removed to keep connection open for app requests
 except Exception as e:
     print(f"Database connection failed: {e}")
+
+# Ensure db connection per request
+@app.before_request
+def _db_connect():
+    if db.is_closed():
+        db.connect()
+
+@app.teardown_request
+def _db_close(exc):
+    if not db.is_closed():
+        db.close()
 
 base_url = "/" 
 
