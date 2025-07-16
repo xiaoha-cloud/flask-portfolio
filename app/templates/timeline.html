@@ -46,9 +46,55 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="/static/js/main.js"></script>
 <script>
-    // Initialize timeline functionality
-    initTimeline();
+    // Load posts on page load
+    function loadTimelinePosts() {
+        fetch('/api/timeline_post')
+            .then(response => response.json())
+            .then(posts => {
+                const postsDiv = document.getElementById('timeline-posts');
+                if (!Array.isArray(posts)) {
+                    postsDiv.innerHTML = '<p>No posts found.</p>';
+                    return;
+                }
+                if (posts.length === 0) {
+                    postsDiv.innerHTML = '<p>No posts yet.</p>';
+                    return;
+                }
+                postsDiv.innerHTML = posts.map(post => `
+                <div class="timeline-post">
+                    <strong>${post.name}</strong> (${post.email})<br>
+                    <span>${post.content}</span><br>
+                    <small>${post.created_at}</small>
+                </div>
+            `).join('');
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadTimelinePosts();
+        document.getElementById('timeline-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            fetch('/api/timeline_post', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text); });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    form.reset();
+                    loadTimelinePosts();
+                })
+                .catch(err => {
+                    alert('Error: ' + err.message);
+                });
+        });
+    });
 </script>
 {% endblock %}

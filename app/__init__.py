@@ -9,13 +9,16 @@ load_dotenv()
 app = Flask(__name__)
 
 # Database connection
-db = MySQLDatabase(
-    os.getenv("MYSQL_DATABASE", "myportfoliodb"),
-    user=os.getenv("MYSQL_USER", "myportfolio"),
-    password=os.getenv("MYSQL_PASSWORD", "mypassword"),
-    host=os.getenv("MYSQL_HOST", "localhost"),
-    port=3306
-)
+if os.getenv("TESTING") == "true":
+    db = SqliteDatabase(':memory:')
+else:
+    db = MySQLDatabase(
+        os.getenv("MYSQL_DATABASE", "myportfoliodb"),
+        user=os.getenv("MYSQL_USER", "myportfolio"),
+        password=os.getenv("MYSQL_PASSWORD", "mypassword"),
+        host=os.getenv("MYSQL_HOST", "localhost"),
+        port=3306
+    )
 
 # TimelinePost model definition
 class TimelinePost(Model):
