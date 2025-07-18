@@ -1,29 +1,28 @@
 #!/bin/bash
 
 # Redeploy Site Script
-# This script automates the redeployment process for the Flask portfolio site
+# This script automates the redeployment process for the Flask portfolio site using systemd service
 
 echo "Starting redeployment process..."
 
-# Step 1: Kill all existing tmux sessions
-echo "Killing existing tmux sessions..."
-tmux kill-server 2>/dev/null || true
-
-# Step 2: Navigate to project directory
+# Step 1: Navigate to project directory
 echo "Navigating to project directory..."
 cd ~/flask-portfolio || {
     echo "Error: Could not find flask-portfolio directory"
     exit 1
 }
 
-# Step 3: Update git repository with latest changes
+echo "Current git remote:"
+git remote -v
+
+# Step 2: Update git repository with latest changes
 echo "Fetching and resetting to latest changes from GitHub..."
 git fetch && git reset origin/main --hard || {
     echo "Error: Failed to update git repository"
     exit 1
 }
 
-# Step 4: Activate virtual environment and install dependencies
+# Step 3: Activate virtual environment and install dependencies
 echo "Activating virtual environment and installing dependencies..."
 source python3-virtualenv/bin/activate || {
     echo "Error: Failed to activate virtual environment"
@@ -35,25 +34,25 @@ pip install -r requirements.txt || {
     exit 1
 }
 
-# Step 5: Start new detached tmux session with Flask server
-echo "Starting Flask server in new tmux session..."
-tmux new-session -d -s flask-server -c ~/flask-portfolio << EOF
-source python3-virtualenv/bin/activate
-export FLASK_APP=app
-export FLASK_ENV=production
-python -m flask run --host=0.0.0.0 --port=5000
-EOF
+# Step 4: Restart myportfolio service
+echo "Restarting myportfolio service..."
+sudo systemctl restart myportfolio || {
+    echo "Error: Failed to restart myportfolio service"
+    exit 1
+}
 
-# Wait a moment for the server to start
+# Wait a moment for the service to start
 sleep 3
 
-# Check if the tmux session is running
-if tmux has-session -t flask-server 2>/dev/null; then
+# Check if the service is running
+if sudo systemctl is-active --quiet myportfolio; then
     echo "Redeployment completed successfully!"
-    echo "Flask server is running in tmux session 'flask-server'"
-    echo "You can check the server status with: tmux attach -t flask-server"
-    echo "To detach from the session, press Ctrl+B then D"
+    echo "Flask server is running as systemd service 'myportfolio'"
+    echo "You can check the service status with: sudo systemctl status myportfolio"
+    echo "You can view logs with: sudo journalctl -u myportfolio -f"
+    echo "Website is accessible at: http://jememaflask.duckdns.org:5000"
 else
-    echo "Error: Failed to start Flask server"
+    echo "Error: Failed to start myportfolio service"
+    echo "Check service logs with: sudo journalctl -u myportfolio"
     exit 1
 fi

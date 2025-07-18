@@ -9,13 +9,16 @@ load_dotenv()
 app = Flask(__name__)
 
 # Database connection
-db = MySQLDatabase(
-    os.getenv("MYSQL_DATABASE", "myportfoliodb"),
-    user=os.getenv("MYSQL_USER", "myportfolio"),
-    password=os.getenv("MYSQL_PASSWORD", "mypassword"),
-    host=os.getenv("MYSQL_HOST", "localhost"),
-    port=3306
-)
+if os.getenv("TESTING") == "true":
+    db = SqliteDatabase(':memory:')
+else:
+    db = MySQLDatabase(
+        os.getenv("MYSQL_DATABASE", "myportfoliodb"),
+        user=os.getenv("MYSQL_USER", "myportfolio"),
+        password=os.getenv("MYSQL_PASSWORD", "mypassword"),
+        host=os.getenv("MYSQL_HOST", "localhost"),
+        port=3306
+    )
 
 # TimelinePost model definition
 class TimelinePost(Model):
@@ -32,9 +35,20 @@ try:
     db.connect()
     db.create_tables([TimelinePost], safe=True)
     print(f"Database connection successful: {db}")
-    db.close()
+    # db.close()  # Removed to keep connection open for app requests
 except Exception as e:
     print(f"Database connection failed: {e}")
+
+# Ensure db connection per request
+@app.before_request
+def _db_connect():
+    if db.is_closed():
+        db.connect()
+
+@app.teardown_request
+def _db_close(exc):
+    if not db.is_closed():
+        db.close()
 
 base_url = "/" 
 
@@ -229,3 +243,14 @@ def delete_timeline_post(post_id):
         return jsonify({'result': 'Deleted'}), 200
     else:
         return jsonify({'error': 'Not found'}), 404
+
+if os.getenv("TESTING") == "true":
+    print("Running in test mode")
+    mydb = SqliteDatabase('file:memory?mode=memory&cache=shared', uri=True)
+else:
+    mydb = MySQLDatabase(os.getenv("MYSQL_DATABASE"),
+        user=os.getenv("MYSQL_USER"),
+        password=os.getenv("MYSQL_PASSWORD"),
+        host=os.getenv("MYSQL_HOST"),
+        port=3306
+    )
