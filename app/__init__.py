@@ -54,7 +54,7 @@ navigation_items = [
     {'name': 'Hobbies', 'url': '/hobbies', 'active': False},
     {'name': 'Visited Places', 'url': base_url + '#visited-places', 'active': False},
     {'name': 'Timeline', 'url': '/timeline', 'active': False},
-
+]
 
 mydb = MySQLDatabase(os.getenv("MYSQL_DATABASE"),
                      user= os.getenv("MYSQL_USER"),
@@ -208,9 +208,6 @@ def hobbies_page():
                          url=os.getenv("URL"),
                          hobbies=hobbies,
                          navigation=get_navigation('/hobbies'))
-
-@app.route('/api/timeline', methods=['POST'])
-def post_timeline():
 
 
 @app.route('/map')
