@@ -1,4 +1,5 @@
 import os
+import datetime
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
 from peewee import MySQLDatabase, Model, CharField, TextField, DateTimeField, DoesNotExist
@@ -8,7 +9,43 @@ import datetime
 load_dotenv()
 app = Flask(__name__)
 
-base_url = "/" 
+base_url = "/"
+
+# mydb = MySQLDatabase(
+#     os.getenv("MYSQL_DATABASE"),
+#     user=os.getenv("MYSQL_USER"),
+#     password=os.getenv("MYSQL_PASSWORD"),
+#     host=os.getenv("MYSQL_HOST"),
+#     port=3306
+# )
+if os.getenv("TESTING") == 'true':
+    print("Running in test mode, using SQLite in-memory database")
+    mydb = SqliteDatabase('file:memory?mode=memory&cache=shared', uri=True)
+else:
+    mydb = MySQLDatabase(
+    os.getenv("MYSQL_DATABASE"),
+    user=os.getenv("MYSQL_USER"),
+    password=os.getenv("MYSQL_PASSWORD"),
+    host=os.getenv("MYSQL_HOST"),
+    port=3306
+)
+
+class BaseModel(Model):
+    class Meta:
+        database = mydb
+
+from peewee import AutoField
+
+class TimelinePost(BaseModel):
+    id = AutoField()
+    name = CharField()
+    email = CharField()
+    content = TextField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+
+
+mydb.connect()
+mydb.create_tables([TimelinePost])
 
 navigation_items = [
     {'name': 'Home', 'url': base_url + '#profile', 'active': False},
@@ -16,8 +53,8 @@ navigation_items = [
     {'name': 'Education', 'url': base_url + '#education', 'active': False},
     {'name': 'Hobbies', 'url': '/hobbies', 'active': False},
     {'name': 'Visited Places', 'url': base_url + '#visited-places', 'active': False},
-    {'name': 'Timeline', 'url': '/timeline', 'active': False}
-]
+    {'name': 'Timeline', 'url': '/timeline', 'active': False},
+
 
 mydb = MySQLDatabase(os.getenv("MYSQL_DATABASE"),
                      user= os.getenv("MYSQL_USER"),
@@ -154,7 +191,7 @@ def index():
     return render_template('index.html',
                          title="MLH Fellow",
                          url=os.getenv("URL"),
-                         name="Luke Skywalker",
+                         name="Ace Perez",
                          role="Software Developer",
                          about_text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                          work_experiences=work_experiences,
@@ -175,36 +212,71 @@ def hobbies_page():
 @app.route('/api/timeline', methods=['POST'])
 def post_timeline():
 
+
+@app.route('/map')
+def map_page():  # Changed from hobbies_page
+    return render_template('map.html',
+                         title="Places I've Visited",
+                         url=os.getenv("URL"),
+                         visited_locations=visited_locations,  # Pass correct data
+                         navigation=get_navigation('/map'))
+
+@app.route('/api/timeline_post', methods=['POST'])
+def timeline_post():
     name = request.form.get('name')
     email = request.form.get('email')
     content = request.form.get('content')
-    print(name, email, content)
-
-    post = TimelinePost.create(name=name, email=email, content=content)
-    return model_to_dict(post), 201
-
-@app.route('/api/timeline', methods=['GET'])
-def get_timeline():
-    return {
-        'posts': [model_to_dict(p) for p in TimelinePost.select().order_by(TimelinePost.created_at.desc())]
-    }
     
-# curl --request POST http://localhost:5000/api/timeline -d 'name=Luke&email=luke@gmail.com&content=Hello, this is a test post!'
+    # Validate input
+    if not name or name.strip() == '':
+        return 'Invalid name', 400
+    
+    if not content or content.strip() == '':
+        return 'Invalid content', 400
+    
+    # Basic email validation
+    if not email or '@' not in email or '.' not in email.split('@')[-1]:
+        return 'Invalid email', 400
+    
+    timeline_post = TimelinePost.create(name=name, email=email, content=content)
 
-@app.route('/api/timeline/<int:post_id>', methods=['DELETE'])
-def delete_timeline(post_id):
+    return model_to_dict(timeline_post)
+
+@app.route('/api/timeline_posts', methods=['GET'])
+def get_timeline_posts():
+    return{
+        'timeline_posts': [
+            model_to_dict(p)
+            for p in TimelinePost.select().order_by(TimelinePost.created_at.desc())
+        ]
+    }
+@app.route('/api/timeline_post/<int:post_id>', methods=['DELETE'])
+def delete_timeline_post(post_id):
     try:
         post = TimelinePost.get(TimelinePost.id == post_id)
+
         post.delete_instance()
-        return '', 204
+
+        return {
+            'message': f'Timeline post {post_id} deleted successfully',
+            'deleted_id': post_id
+        }, 200
+
     except DoesNotExist:
-        return {'error': 'Post not found'}, 404
-    
+        return {
+            'error': f'Timeline post with ID {post_id} not found'
+        }, 404
+    except Exception as e:
+        return {
+            'error': f'Failed to delete timeline post: {str(e)}'
+        }, 500
+
 @app.route('/timeline')
-def timeline():
-    return render_template(
-        'timeline.html',
-        title="Timeline",
-        url=os.getenv("URL"),
-        navigation=get_navigation('/timeline')
-    )
+def timeline_page():
+    return render_template('timeline.html',
+                         title="Timeline",
+                        navigation=get_navigation('/timeline'),)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5001, host='0.0.0.0')
+

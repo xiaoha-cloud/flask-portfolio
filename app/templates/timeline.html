@@ -1,5 +1,140 @@
 {% extends "base.html" %}
 
+{% block title %}Timeline{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-text">
+        <div class="about timeline-section">
+            <h2>Timeline</h2>
+            <p>Share your thoughts and see what others are saying!</p>
+            
+            <!-- Post Creation Form -->
+            <div class="timeline-form">
+                <h3>Add a Post</h3>
+                <form id="timeline-form">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Content:</label>
+                        <textarea id="content" name="content" rows="4" required></textarea>
+                    </div>
+                    <button type="submit">Post</button>
+                </form>
+            </div>
+
+            <!-- Timeline Posts Display -->
+            <div class="timeline-posts">
+                <h3>Recent Posts</h3>
+                <div id="posts-container">
+                    <!-- Posts will be loaded here via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Function to generate Gravatar URL
+function getGravatarUrl(email, size = 50) {
+    const hash = CryptoJS.MD5(email.trim().toLowerCase()).toString();
+    return `https://www.gravatar.com/avatar/${hash}?s=${size}&d=identicon`;
+}
+
+// Load posts when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadPosts();
+});
+
+// Handle form submission
+document.getElementById('timeline-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch('/api/timeline_post', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Clear form
+        this.reset();
+        // Reload posts
+        loadPosts();
+        alert('Post created successfully!');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error creating post');
+    });
+});
+
+// Load and display posts
+function loadPosts() {
+    fetch('/api/timeline_posts')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('posts-container');
+            container.innerHTML = '';
+            
+            if (data.timeline_posts.length === 0) {
+                container.innerHTML = '<p>No posts yet. Be the first to post!</p>';
+                return;
+            }
+            
+            data.timeline_posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'timeline-post';
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-author">
+                            <img src="${getGravatarUrl(post.email)}" alt="Avatar" class="gravatar">
+                            <h4>${post.name}</h4>
+                        </div>
+                        <div class="post-actions">
+                            <span class="post-date">${new Date(post.created_at).toLocaleDateString()}</span>
+                            <button class="delete-btn" onclick="deletePost(${post.id})">Delete</button>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>${post.content}</p>
+                    </div>
+                `;
+                container.appendChild(postElement);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading posts:', error);
+        });
+}
+
+// Delete post
+function deletePost(postId) {
+    if (confirm('Are you sure you want to delete this post?')) {
+        fetch(`/api/timeline_post/${postId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            loadPosts();
+            alert('Post deleted successfully!');
+        })
+        .catch(error => {
+            console.error('Error deleting post:', error);
+            alert('Error deleting post');
+        });
+    }
+}
+</script>
+{% endblock %}
+=======
 {% block title %}My Timeline{% endblock %}
 
 {% block content %}
@@ -87,3 +222,4 @@
   loadPosts();
 </script>
 {% endblock %}
+
