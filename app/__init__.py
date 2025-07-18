@@ -2,8 +2,9 @@ import os
 import datetime
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
-from peewee import CharField, TextField, DateTimeField, MySQLDatabase, DoesNotExist, Model, SqliteDatabase
+from peewee import MySQLDatabase, Model, CharField, TextField, DateTimeField, DoesNotExist
 from playhouse.shortcuts import model_to_dict
+import datetime
 
 load_dotenv()
 app = Flask(__name__)
@@ -53,9 +54,33 @@ navigation_items = [
     {'name': 'Hobbies', 'url': '/hobbies', 'active': False},
     {'name': 'Visited Places', 'url': base_url + '#visited-places', 'active': False},
     {'name': 'Timeline', 'url': '/timeline', 'active': False},
-]
 
 
+mydb = MySQLDatabase(os.getenv("MYSQL_DATABASE"),
+                     user= os.getenv("MYSQL_USER"),
+                     password=os.getenv("MYSQL_PASSWORD"),
+                     host=os.getenv("MYSQL_HOST"),
+                        port=3306)
+print(mydb)
+
+from peewee import AutoField
+
+# Import the model-specific DoesNotExist exception for TimelinePost
+TimelinePostDoesNotExist = type('TimelinePost', (object,), {})
+
+
+class TimelinePost(Model):
+    id = AutoField()
+    name = CharField()
+    email = CharField()
+    content = TextField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+    class Meta:
+        database = mydb
+
+mydb.connect()
+mydb.create_tables([TimelinePost], safe=True)
+                       
 
 def get_navigation(current_page):
     nav_items = []
@@ -184,13 +209,9 @@ def hobbies_page():
                          hobbies=hobbies,
                          navigation=get_navigation('/hobbies'))
 
-@app.route('/experience')
-def experience_page():  # Changed from hobbies_page
-    return render_template('experience.html',
-                         title="My Experience",
-                         url=os.getenv("URL"),
-                         work_experiences=work_experiences,  # Pass correct data
-                         navigation=get_navigation('/experience'))
+@app.route('/api/timeline', methods=['POST'])
+def post_timeline():
+
 
 @app.route('/map')
 def map_page():  # Changed from hobbies_page
@@ -258,3 +279,4 @@ def timeline_page():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001, host='0.0.0.0')
+
