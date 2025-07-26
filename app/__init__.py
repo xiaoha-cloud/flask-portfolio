@@ -211,6 +211,7 @@ def timeline_page():
 @app.route('/api/timeline_post', methods=['POST'])
 def post_timeline_post():
     # Rate limiting: 1 request per minute per IP
+    global rate_limit_storage
     client_ip = request.remote_addr
     current_time = time.time()
     
