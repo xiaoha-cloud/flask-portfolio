@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 from peewee import *
 import datetime
+import time
 from playhouse.shortcuts import model_to_dict
 
 load_dotenv()
@@ -38,6 +39,9 @@ try:
     print(f"Database connection successful: {db}")
 except Exception as e:
     print(f"Database connection failed: {e}")
+
+# Rate limiting storage
+rate_limit_storage = {}
 
 # Ensure db connection per request
 @app.before_request
@@ -206,6 +210,24 @@ def timeline_page():
 # POST endpoint to create a timeline post
 @app.route('/api/timeline_post', methods=['POST'])
 def post_timeline_post():
+    # Rate limiting: 1 request per minute per IP
+    client_ip = request.remote_addr
+    current_time = time.time()
+    
+    # Clean old entries (older than 1 minute)
+    rate_limit_storage = {ip: timestamp for ip, timestamp in rate_limit_storage.items() 
+                         if current_time - timestamp < 60}
+    
+    # Check if this IP has made a request in the last minute
+    if client_ip in rate_limit_storage:
+        return jsonify({
+            'error': 'Rate limit exceeded. Please wait 1 minute before making another request.',
+            'rate_limit': '1 request per minute'
+        }), 429
+    
+    # Record this request
+    rate_limit_storage[client_ip] = current_time
+    
     name = request.form.get('name')
     email = request.form.get('email')
     content = request.form.get('content')
