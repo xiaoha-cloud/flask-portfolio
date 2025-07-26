@@ -1,86 +1,65 @@
 import os
-import datetime
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
-from peewee import MySQLDatabase, Model, CharField, TextField, DateTimeField, DoesNotExist
-from playhouse.shortcuts import model_to_dict
+from peewee import *
 import datetime
+from playhouse.shortcuts import model_to_dict
 
 load_dotenv()
 app = Flask(__name__)
 
-base_url = "/"
-
-# mydb = MySQLDatabase(
-#     os.getenv("MYSQL_DATABASE"),
-#     user=os.getenv("MYSQL_USER"),
-#     password=os.getenv("MYSQL_PASSWORD"),
-#     host=os.getenv("MYSQL_HOST"),
-#     port=3306
-# )
-if os.getenv("TESTING") == 'true':
-    print("Running in test mode, using SQLite in-memory database")
-    mydb = SqliteDatabase('file:memory?mode=memory&cache=shared', uri=True)
+# Database connection
+if os.getenv("TESTING") == "true":
+    db = SqliteDatabase(':memory:')
 else:
-    mydb = MySQLDatabase(
-    os.getenv("MYSQL_DATABASE"),
-    user=os.getenv("MYSQL_USER"),
-    password=os.getenv("MYSQL_PASSWORD"),
-    host=os.getenv("MYSQL_HOST"),
-    port=3306
-)
+    db = MySQLDatabase(
+        os.getenv("MYSQL_DATABASE", "myportfoliodb"),
+        user=os.getenv("MYSQL_USER", "myportfolio"),
+        password=os.getenv("MYSQL_PASSWORD", "mypassword"),
+        host=os.getenv("MYSQL_HOST", "localhost"),
+        port=3306
+    )
 
-class BaseModel(Model):
-    class Meta:
-        database = mydb
-
-from peewee import AutoField
-
-class TimelinePost(BaseModel):
-    id = AutoField()
-    name = CharField()
-    email = CharField()
-    content = TextField()
-    created_at = DateTimeField(default=datetime.datetime.now)
-
-
-mydb.connect()
-mydb.create_tables([TimelinePost])
-
-navigation_items = [
-    {'name': 'Home', 'url': base_url + '#profile', 'active': False},
-    {'name': 'Experience', 'url': base_url + '#work-experience', 'active': False},
-    {'name': 'Education', 'url': base_url + '#education', 'active': False},
-    {'name': 'Hobbies', 'url': '/hobbies', 'active': False},
-    {'name': 'Visited Places', 'url': base_url + '#visited-places', 'active': False},
-    {'name': 'Timeline', 'url': '/timeline', 'active': False},
-]
-
-mydb = MySQLDatabase(os.getenv("MYSQL_DATABASE"),
-                     user= os.getenv("MYSQL_USER"),
-                     password=os.getenv("MYSQL_PASSWORD"),
-                     host=os.getenv("MYSQL_HOST"),
-                        port=3306)
-print(mydb)
-
-from peewee import AutoField
-
-# Import the model-specific DoesNotExist exception for TimelinePost
-TimelinePostDoesNotExist = type('TimelinePost', (object,), {})
-
-
+# TimelinePost model definition
 class TimelinePost(Model):
     id = AutoField()
     name = CharField()
     email = CharField()
     content = TextField()
     created_at = DateTimeField(default=datetime.datetime.now)
-    class Meta:
-        database = mydb
 
-mydb.connect()
-mydb.create_tables([TimelinePost], safe=True)
-                       
+    class Meta:
+        database = db
+
+# Connect and create table if not exists
+try:
+    db.connect()
+    db.create_tables([TimelinePost], safe=True)
+    print(f"Database connection successful: {db}")
+except Exception as e:
+    print(f"Database connection failed: {e}")
+
+# Ensure db connection per request
+@app.before_request
+def _db_connect():
+    if db.is_closed():
+        db.connect()
+
+@app.teardown_request
+def _db_close(exc):
+    if not db.is_closed():
+        db.close()
+
+base_url = "/"
+
+navigation_items = [
+    {'name': 'Home', 'url': base_url + '#profile', 'active': False},
+    {'name': 'Experience', 'url': base_url + '#work-experience', 'active': False},
+    {'name': 'Education', 'url': base_url + '#education', 'active': False},
+    {'name': 'Hobbies', 'url': '/hobbies', 'active': False},
+    {'name': 'Timeline', 'url': '/timeline', 'active': False},
+    {'name': 'Visited Places', 'url': base_url + '#visited-places', 'active': False},
+]
 
 def get_navigation(current_page):
     nav_items = []
@@ -114,7 +93,6 @@ work_experiences = [
     }
 ]
 
-# Education data structure - will be populated by other team members
 education = [
     {
         "degree": "Master of Science in Software Engineering",
@@ -137,6 +115,7 @@ education = [
         ]
     }
 ]
+
 hobbies = [
     {
         'name': 'Photography',
@@ -157,6 +136,7 @@ hobbies = [
         'icon_color': '#0c59ff'
     }
 ]
+
 visited_locations = [
     {
         "name": "Paris, France",
@@ -185,7 +165,6 @@ visited_locations = [
     }
 ]
 
-
 @app.route('/')
 def index():
     return render_template('index.html',
@@ -209,71 +188,63 @@ def hobbies_page():
                          hobbies=hobbies,
                          navigation=get_navigation('/hobbies'))
 
-
 @app.route('/map')
-def map_page():  # Changed from hobbies_page
+def map_page():
     return render_template('map.html',
                          title="Places I've Visited",
                          url=os.getenv("URL"),
-                         visited_locations=visited_locations,  # Pass correct data
+                         visited_locations=visited_locations,
                          navigation=get_navigation('/map'))
 
+@app.route('/timeline')
+def timeline_page():
+    return render_template('timeline.html',
+                         title="Timeline",
+                         url=os.getenv("URL"),
+                         navigation=get_navigation('/timeline'))
+
+# POST endpoint to create a timeline post
 @app.route('/api/timeline_post', methods=['POST'])
-def timeline_post():
+def post_timeline_post():
     name = request.form.get('name')
     email = request.form.get('email')
     content = request.form.get('content')
     
     # Validate input
     if not name or name.strip() == '':
-        return 'Invalid name', 400
+        return jsonify({'error': 'Invalid name'}), 400
     
     if not content or content.strip() == '':
-        return 'Invalid content', 400
+        return jsonify({'error': 'Invalid content'}), 400
     
     # Basic email validation
     if not email or '@' not in email or '.' not in email.split('@')[-1]:
-        return 'Invalid email', 400
+        return jsonify({'error': 'Invalid email'}), 400
     
-    timeline_post = TimelinePost.create(name=name, email=email, content=content)
+    timeline_post = TimelinePost.create(
+        name=name,
+        email=email,
+        content=content
+    )
+    return model_to_dict(timeline_post), 201
 
-    return model_to_dict(timeline_post)
+# GET endpoint to retrieve all timeline posts
+@app.route('/api/timeline_post', methods=['GET'])
+def get_timeline_post():
+    posts = TimelinePost.select().order_by(TimelinePost.created_at.desc())
+    return jsonify([model_to_dict(post) for post in posts])
 
-@app.route('/api/timeline_posts', methods=['GET'])
-def get_timeline_posts():
-    return{
-        'timeline_posts': [
-            model_to_dict(p)
-            for p in TimelinePost.select().order_by(TimelinePost.created_at.desc())
-        ]
-    }
+# DELETE endpoint to delete a timeline post by id
 @app.route('/api/timeline_post/<int:post_id>', methods=['DELETE'])
 def delete_timeline_post(post_id):
     try:
         post = TimelinePost.get(TimelinePost.id == post_id)
-
         post.delete_instance()
-
-        return {
-            'message': f'Timeline post {post_id} deleted successfully',
-            'deleted_id': post_id
-        }, 200
-
-    except DoesNotExist:
-        return {
-            'error': f'Timeline post with ID {post_id} not found'
-        }, 404
+        return jsonify({'message': f'Timeline post {post_id} deleted successfully'}), 200
+    except TimelinePost.DoesNotExist:
+        return jsonify({'error': f'Timeline post with ID {post_id} not found'}), 404
     except Exception as e:
-        return {
-            'error': f'Failed to delete timeline post: {str(e)}'
-        }, 500
-
-@app.route('/timeline')
-def timeline_page():
-    return render_template('timeline.html',
-                         title="Timeline",
-                        navigation=get_navigation('/timeline'),)
+        return jsonify({'error': f'Failed to delete timeline post: {str(e)}'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001, host='0.0.0.0')
-

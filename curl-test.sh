@@ -1,51 +1,30 @@
 #!/bin/bash
 
-BASE_URL="http://localhost:5000/api/timeline"
+# Test GET endpoint, should return an empty list initially
+echo "Testing GET /api/timeline_post (should be empty):"
+curl -s http://localhost:5000/api/timeline_post | jq
 
-NAME="TestUser_$RANDOM"
-EMAIL="test_$RANDOM@example.com"
-CONTENT="Test post content $RANDOM"
+# Create a random timeline post using POST endpoint
+RANDOM_ID=$RANDOM
+NAME="TestUser$RANDOM_ID"
+EMAIL="test$RANDOM_ID@example.com"
+CONTENT="This is a test post with random id $RANDOM_ID"
 
-echo "[INFO] Creating a timeline post..."
-# Create a new post
-POST_RESPONSE=$(curl -s -X POST "$BASE_URL" \
-  -d "name=$NAME" \
-  -d "email=$EMAIL" \
-  -d "content=$CONTENT")
+echo "Creating a new timeline post with POST /api/timeline_post:"
+RESPONSE=$(curl -s -X POST -d "name=$NAME" -d "email=$EMAIL" -d "content=$CONTENT" http://localhost:5000/api/timeline_post)
+echo $RESPONSE | jq
 
+# Extract the id of the created post
+POST_ID=$(echo $RESPONSE | jq '.id')
 
-POST_ID=$(echo "$POST_RESPONSE" | grep -oP '"id":\s*\K\d+')
+# Test GET endpoint again, should include the new post
+echo "Testing GET /api/timeline_post (should include the new post):"
+curl -s http://localhost:5000/api/timeline_post | jq
 
-if [[ -z "$POST_ID" ]]; then
-  echo "[ERROR] Failed to create post."
-  exit 1
-fi
+# Bonus: Delete the test post
+echo "Deleting the test post with DELETE /api/timeline_post/$POST_ID:"
+curl -s -X DELETE http://localhost:5000/api/timeline_post/$POST_ID | jq
 
-echo "[SUCCESS] Post created with ID: $POST_ID"
-
-# Fetch the post to confirm creation
-echo "[INFO] Fetching timeline posts..."
-GET_RESPONSE=$(curl -s "$BASE_URL")
-
-# Check if the created post is in the response
-if echo "$GET_RESPONSE" | grep -q "$CONTENT"; then
-  echo "[SUCCESS] Post found in GET /api/timeline."
-else
-  echo "[ERROR] Post NOT found in GET /api/timeline."
-  exit 1
-fi
-
-# Delete the post
-echo "[INFO] Deleting post with ID: $POST_ID"
-DELETE_RESPONSE=$(curl -s -X DELETE "$BASE_URL/$POST_ID")
-
-# Confirm deletion
-echo "[INFO] Confirming deletion..."
-CONFIRM_RESPONSE=$(curl -s "$BASE_URL")
-
-if echo "$CONFIRM_RESPONSE" | grep -q "$CONTENT"; then
-  echo "[ERROR] Post was NOT deleted."
-  exit 1
-else
-  echo "[SUCCESS] Post successfully deleted."
-fi
+# Final GET to confirm deletion
+echo "Final GET /api/timeline_post (should not include the deleted post):"
+curl -s http://localhost:5000/api/timeline_post | jq

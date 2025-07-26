@@ -29,7 +29,7 @@
 
 
 <!-- Work Experience -->
-<section class="hero" id ="work-experience">
+<section class="hero" id="work-experience">
     <div class="hero-text">
         <div class="about work-section">
             <h2>Work</h2>
@@ -115,6 +115,41 @@
     </div>
 </section>
 
+<!-- Timeline -->
+<section class="hero" id="timeline">
+    <div class="hero-text">
+        <div class="about">
+            <h2>Timeline</h2>
+            <div class="timeline-section">
+                <div class="timeline-form">
+                    <h3>Create a Timeline Post</h3>
+                    <form id="timeline-form" class="timeline-form">
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Content:</label>
+                            <textarea id="content" name="content" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Create Post</button>
+                    </form>
+                </div>
+                <div class="timeline-posts">
+                    <h3>Recent Posts</h3>
+                    <div id="timeline-posts">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Places I've Visited -->
 <section class="hero" id="visited-places">
     <div class="hero-text">
@@ -129,14 +164,15 @@
 
 {% block extra_scripts %}
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const map = L.map('map').setView([20, 0], 2);
+    document.addEventListener("DOMContentLoaded", () => {
+        const map = L.map('map').setView([20, 0], 2);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
 
-    const locations = {{ visited_locations|tojson|safe }};
+        const locations = {{ visited_locations | tojson | safe
+    }};
 
     locations.forEach(location => {
         const marker = L.marker(location.coords).addTo(map)
@@ -158,6 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
             })
         );
     });
-});
+    });
 </script>
 {% endblock %}
