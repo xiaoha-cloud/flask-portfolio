@@ -17,29 +17,22 @@ git fetch && git reset --hard origin/main || {
     exit 1
 }
 
-# Activate virtual environment
-echo "Activating virtual environment"
-source /root/flask-portfolio/python3-virtualenv/bin/activate || {
-    echo "Error: Failed to activate virtual environment"
+# Stop containers to prevent out of memory issues during build
+echo "Stopping Docker containers"
+docker compose -f docker-compose.prod.yml down || {
+    echo "Error: Failed to stop Docker containers"
     exit 1
 }
 
-# Install dependencies
-echo "Installing Python dependencies"
-pip install -r requirements.txt || {
-    echo "Error: Failed to install dependencies"
-    exit 1
-}
-
-# Restart the systemd service
-echo "Restarting myportfolio service"
-sudo systemctl restart myportfolio || {
-    echo "Error: Failed to restart myportfolio service"
+# Build and start containers
+echo "Building and starting Docker containers"
+docker compose -f docker-compose.prod.yml up -d --build || {
+    echo "Error: Failed to start Docker containers"
     exit 1
 }
 
 # Check status
-echo "Checking service status"
-sudo systemctl status myportfolio --no-pager
+echo "Checking container status"
+docker compose -f docker-compose.prod.yml ps
 
 echo "Redeployment completed successfully!"
