@@ -1,4 +1,4 @@
 #!/bin/bash
 
-. .venv/bin/activate
+. venv/bin/activate
 python -m unittest discover -v tests/ 

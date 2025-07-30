@@ -37,5 +37,5 @@ services:
       - myportfolio
 
 volumes:
-  mydatabase:
+  mydatabase: 
   nginx_secrets: 

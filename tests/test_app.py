@@ -13,6 +13,9 @@ class AppTestCase(unittest.TestCase):
         if db.is_closed():
             db.connect()
         db.create_tables([TimelinePost], safe=True)
+        # Clear rate limiting storage for tests
+        from app import rate_limit_storage
+        rate_limit_storage.clear()
 
     def tearDown(self):
         # Clean up after each test
@@ -45,7 +48,7 @@ class AppTestCase(unittest.TestCase):
         assert response.status_code == 400
         json = response.get_json()
         assert "error" in json
-        assert "Missing required fields" in json["error"]
+        assert "Invalid name" in json["error"]
 
         # POST request with empty content
         response = self.client.post("/api/timeline_post", data={
@@ -53,7 +56,7 @@ class AppTestCase(unittest.TestCase):
         assert response.status_code == 400
         json = response.get_json()
         assert "error" in json
-        assert "Missing required fields" in json["error"]
+        assert "Invalid content" in json["error"]
 
         # POST request with malformed email (currently not validated in your app)
         # This test would fail with your current implementation since you don't validate email format

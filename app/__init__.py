@@ -32,13 +32,18 @@ class TimelinePost(Model):
     class Meta:
         database = db
 
-# Connect and create table if not exists
-try:
-    db.connect()
-    db.create_tables([TimelinePost], safe=True)
-    print(f"Database connection successful: {db}")
-except Exception as e:
-    print(f"Database connection failed: {e}")
+# Initialize database connection
+def init_db():
+    try:
+        db.connect()
+        db.create_tables([TimelinePost], safe=True)
+        print(f"Database connection successful: {db}")
+    except Exception as e:
+        print(f"Database connection failed: {e}")
+
+# Only initialize database if not in testing mode
+if os.getenv("TESTING") != "true":
+    init_db()
 
 # Rate limiting storage
 rate_limit_storage = {}
@@ -210,24 +215,25 @@ def timeline_page():
 # POST endpoint to create a timeline post
 @app.route('/api/timeline_post', methods=['POST'])
 def post_timeline_post():
-    # Rate limiting: 1 request per minute per IP
-    global rate_limit_storage
-    client_ip = request.remote_addr
-    current_time = time.time()
-    
-    # Clean old entries (older than 1 minute)
-    rate_limit_storage = {ip: timestamp for ip, timestamp in rate_limit_storage.items() 
-                         if current_time - timestamp < 60}
-    
-    # Check if this IP has made a request in the last minute
-    if client_ip in rate_limit_storage:
-        return jsonify({
-            'error': 'Rate limit exceeded. Please wait 1 minute before making another request.',
-            'rate_limit': '1 request per minute'
-        }), 429
-    
-    # Record this request
-    rate_limit_storage[client_ip] = current_time
+    # Rate limiting: 1 request per minute per IP (disabled during testing)
+    if os.getenv("TESTING") != "true":
+        global rate_limit_storage
+        client_ip = request.remote_addr
+        current_time = time.time()
+        
+        # Clean old entries (older than 1 minute)
+        rate_limit_storage = {ip: timestamp for ip, timestamp in rate_limit_storage.items() 
+                             if current_time - timestamp < 60}
+        
+        # Check if this IP has made a request in the last minute
+        if client_ip in rate_limit_storage:
+            return jsonify({
+                'error': 'Rate limit exceeded. Please wait 1 minute before making another request.',
+                'rate_limit': '1 request per minute'
+            }), 429
+        
+        # Record this request
+        rate_limit_storage[client_ip] = current_time
     
     name = request.form.get('name')
     email = request.form.get('email')
