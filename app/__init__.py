@@ -81,91 +81,82 @@ def get_navigation(current_page):
 # Data structures for dynamic content
 work_experiences = [
     {
-        'title': 'Senior Software Developer',
-        'company': 'TechCorp Solutions',
-        'duration': 'January 2020 - Present',
+        'title': 'Site Reliability Engineer',
+        'company': 'MLH Fellowship',
+        'duration': 'June 2025 - Present',
         'achievements': [
-            'Led the development of cloud-native applications using AWS services, resulting in 40% improved scalability',
-            'Implemented CI/CD pipelines using GitHub Actions and AWS CodePipeline',
-            'Mentored junior developers and conducted code reviews to maintain high code quality'
+            'Selected for highly competitive MLH Fellowship (2.5% acceptance rate)',
+            'Focused on open-source DevOps and reliability engineering',
+            'Collaborating in mentored pod for production-grade backend/SRE projects'
         ]
     },
     {
-        'title': 'Software Developer',
-        'company': 'DataTech Systems',
-        'duration': 'June 2017 - December 2019',
+        'title': 'Google Summer of Code Contributor',
+        'company': 'Google Summer of Code, CHAOSS/Augur Project',
+        'duration': 'June 2025 - Present',
         'achievements': [
-            'Developed and maintained data analytics platforms serving over 100,000 users',
-            'Optimized database queries resulting in 60% faster response times',
-            'Collaborated with cross-functional teams to deliver features on schedule'
+            'Accepted into GSoC, Google-sponsored open-source program',
+            'Enhanced LDA/HDP topic modeling pipelines and metadata versioning',
+            'Developed visualization using Python (Gensim, pyLDAvis) and PostgreSQL'
+        ]
+    },
+    {
+        'title': 'IOS Developer',
+        'company': 'Quantum Harbour IT Systems Limited',
+        'duration': 'March 2025 - March 2025',
+        'achievements': [
+            'Designed and implemented core features including dynamic inspection forms',
+            'Developed camera/photo upload, DWG and file handling, offline data storage',
+            'Used Swift, MVVM architecture, and Core Data for iOS development'
+        ]
+    },
+    {
+        'title': 'Graduate Teaching Assistant',
+        'company': 'National University of Ireland Galway',
+        'duration': 'October 2024 - December 2024',
+        'achievements': [
+            'Supported students in completing Java coding assignments',
+            'Debugged complex software development problems during lab sessions',
+            'Assisted with two modules (CT and CT)'
         ]
     }
 ]
 
 education = [
     {
-        "degree": "Master of Science in Software Engineering",
-        "school": "University of Technology",
-        "duration": "August 2077 - May 2077",
+        "degree": "MSc in Software Development",
+        "school": "National University of Ireland Galway",
+        "duration": "2023 - 2025",
         "achievements": [
-            "Specialized in Cloud Computing and Distributed Systems",
-            "Thesis: 'Optimizing Cloud-Based Data Processing for Large-Scale Applications'",
-            "Participated in various hackathons and coding competitions"
-        ]
-    },
-    {
-        "degree": "Bachelor of Science in Computer Science",
-        "school": "Tech University",
-        "duration": "August 1337 - May 1337",
-        "achievements": [
-            "Graduated with Honors",
-            "Relevant Coursework: Data Structures, Algorithms, Database Systems, Cloud Computing",
-            "Capstone Project: Developed a cloud-based application for real-time data analytics"
+            "Honors Degree (Estimated)",
+            "Relevant Coursework: Computing Architecture & Operating Systems, Internet Programming",
+            "Algorithmics & Logical Methods, Programming I, Databases, Software Engineering",
+            "Object Oriented Software Design & Development, Computer Networks and Data Communications",
+            "Principles of Machine Learning, Programming and Tools of AI, Graphics & Image Processing"
         ]
     }
 ]
 
 hobbies = [
     {
-        'name': 'Photography',
-        'description': 'Passionate about capturing moments and exploring different perspectives through the lens.',
-        'details': 'I specialize in landscape and street photography. My favorite time to shoot is during golden hour, and I love experimenting with long exposure techniques.',
-        'icon_color': '#1C539F'
-    },
-    {
-        'name': 'Hiking',
-        'description': 'Love exploring nature trails and challenging myself with different terrains.',
-        'details': 'I regularly explore local trails and have completed several challenging mountain hikes. My goal is to hike at least one new trail every month.',
+        'name': 'Hackathons',
+        'description': 'Love participating in coding competitions and hackathons.',
+        'details': 'Achieved 3rd Prize in iTwin Good Championship by developing smart parking management system. Experience with React Native, AWS, and real-time data processing.',
         'icon_color': '#d4851a'
     },
     {
         'name': 'Open Source',
         'description': 'Contributing to open source projects and building side projects.',
-        'details': 'I actively contribute to various open source projects, mainly focusing on Python and JavaScript libraries. I believe in the power of community-driven development.',
+        'details': 'Active contributor to Google Summer of Code with CHAOSS/Augur Project. Working on LDA/HDP topic modeling pipelines and visualization using Python.',
         'icon_color': '#0c59ff'
     }
 ]
 
 visited_locations = [
     {
-        "name": "Paris, France",
-        "coords": [48.8566, 2.3522],
-        "description": "Visited the Eiffel Tower and Louvre Museum"
-    },
-    {
         "name": "Tokyo, Japan",
         "coords": [35.6762, 139.6503],
         "description": "Explored Shibuya and enjoyed authentic sushi"
-    },
-    {
-        "name": "New York, USA",
-        "coords": [40.7128, -74.0060],
-        "description": "Saw Times Square and Central Park"
-    },
-    {
-        "name": "Sydney, Australia",
-        "coords": [-33.8688, 151.2093],
-        "description": "Visited the Opera House and Bondi Beach"
     },
     {
         "name": "Bermuda Triangle",
@@ -179,9 +170,9 @@ def index():
     return render_template('index.html',
                          title="MLH Fellow",
                          url=os.getenv("URL"),
-                         name="Ace Perez",
-                         role="Software Developer",
-                         about_text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                         name="JIAHONG LIN",
+                         role="Site Reliability Engineer",
+                         about_text="I am a passionate software engineer with expertise in full-stack development, machine learning, and DevOps. Currently working as a Site Reliability Engineer at MLH Fellowship and contributing to Google Summer of Code with CHAOSS/Augur Project. I specialize in Python, React, TypeScript, and cloud technologies including AWS and Railway.",
                          work_experiences=work_experiences,
                          education=education,
                          hobbies=hobbies,
