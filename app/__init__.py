@@ -153,16 +153,6 @@ hobbies = [
 ]
 
 visited_locations = [
-    {
-        "name": "Tokyo, Japan",
-        "coords": [35.6762, 139.6503],
-        "description": "Explored Shibuya and enjoyed authentic sushi"
-    },
-    {
-        "name": "Bermuda Triangle",
-        "coords": [25.0000, -71.0000],
-        "description": "Met some aliens and they were friendly! They even gave me a ride in their spaceship."
-    }
 ]
 
 @app.route('/')
