@@ -128,7 +128,6 @@ education = [
         "school": "National University of Ireland Galway",
         "duration": "2023 - 2025",
         "achievements": [
-            "Honors Degree (Estimated)",
             "Relevant Coursework: Computing Architecture & Operating Systems, Internet Programming",
             "Algorithmics & Logical Methods, Programming I, Databases, Software Engineering",
             "Object Oriented Software Design & Development, Computer Networks and Data Communications",
