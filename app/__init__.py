@@ -101,11 +101,11 @@ work_experiences = [
         ]
     },
     {
-        'title': 'IOS Developer',
+        'title': 'Software Engineer',
         'company': 'Quantum Harbour IT Systems Limited',
         'duration': 'March 2025 - March 2025',
         'achievements': [
-            'Designed and implemented core features including dynamic inspection forms',
+            'Designed and implemented core features including dynamic inspection forms with SwiftUI',
             'Developed camera/photo upload, DWG and file handling, offline data storage',
             'Used Swift, MVVM architecture, and Core Data for iOS development'
         ]
