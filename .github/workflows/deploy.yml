@@ -28,5 +28,13 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_IP: ${{ secrets.SSH_IP }}
 
+      - name: Debug SSH setup
+        run: |
+          echo "SSH key file exists: $(ls -la ~/.ssh/deploy-key.pem)"
+          echo "SSH config file:"
+          cat ~/.ssh/config
+          echo "SSH key format check:"
+          ssh-keygen -l -f ~/.ssh/deploy-key.pem || echo "Invalid key format"
+
       - name: Print project root directory
         run: ssh my-vps 'cd ${{ secrets.PROJECT_ROOT }} && pwd' 
