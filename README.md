@@ -72,6 +72,7 @@ You'll now be able to access the website at `localhost:5000` or `127.0.0.1:5000`
 - Frontend: HTML, CSS, JavaScript, Leaflet.js
 - Version Control: Git + GitHub
 - Dev Environment: Virtualenv, dotenv
+- CI/CD: GitHub Actions for automated testing
 
 ## Contributions
 
