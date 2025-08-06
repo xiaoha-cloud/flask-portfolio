@@ -161,7 +161,7 @@ def index():
                          url=os.getenv("URL"),
                          name="JIAHONG LIN",
                          role="Site Reliability Engineer",
-                         about_text="I am a passionate software engineer with expertise in full-stack development, machine learning, and DevOps. Currently working as a Site Reliability Engineer at MLH Fellowship and contributing to Google Summer of Code with CHAOSS/Augur Project. I specialize in Python, React, TypeScript, and cloud technologies including AWS and Railway.",
+                         about_text="I am a passionate software engineer with expertise in full-stack development, machine learning, and DevOps. Currently working as a Site Reliability Engineer at MLH Fellowship and contributing to Google Summer of Code with CHAOSS/Augur Project. I specialize in Python, React, TypeScript, and cloud technologies including AWS and Railway. Updated via automated deployment!",
                          work_experiences=work_experiences,
                          education=education,
                          hobbies=hobbies,
