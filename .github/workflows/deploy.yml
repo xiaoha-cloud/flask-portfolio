@@ -36,5 +36,5 @@ jobs:
           echo "SSH key format check:"
           ssh-keygen -l -f ~/.ssh/deploy-key.pem || echo "Invalid key format"
 
-      - name: Print project root directory
-        run: ssh my-vps 'cd ${{ secrets.PROJECT_ROOT }} && pwd' 
+      - name: Deploy site
+        run: ssh my-vps '~/redeploy-site.sh' 
