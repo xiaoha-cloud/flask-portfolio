@@ -1,40 +1,74 @@
-name: Deploy
+name: CD - Deploy to VPS
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
-  deploy:
-    name: "Deploy to VPS"
+  tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Configure SSH
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
         run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy-key.pem
-          chmod 600 ~/.ssh/deploy-key.pem
-          cat >> ~/.ssh/config <<END
-          Host my-vps
-          HostName ${{ secrets.SSH_IP }}
-          User ${{ secrets.SSH_USER }}
-          IdentityFile ~/.ssh/deploy-key.pem
-          StrictHostKeyChecking no
-          END
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run unit tests
+        env:
+          TESTING: 'true'
+        run: |
+          python -m unittest discover -v tests/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy via SSH
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_IP: ${{ secrets.SSH_IP }}
-
-      - name: Debug SSH setup
+          SSH_HOST: ${{ secrets.SSH_HOST }}
         run: |
-          echo "SSH key file exists: $(ls -la ~/.ssh/deploy-key.pem)"
-          echo "SSH config file:"
-          cat ~/.ssh/config
-          echo "SSH key format check:"
-          ssh-keygen -l -f ~/.ssh/deploy-key.pem || echo "Invalid key format"
+          ssh -i ~/.ssh/id_rsa "$SSH_USER@$SSH_HOST" 'bash -ls' << 'EOF'
+          set -e
+          cd /root/flask-portfolio
+          ./redeploy-site.sh
+          EOF
 
-      - name: Deploy site
-        run: ssh my-vps '~/redeploy-site.sh' 
+      - name: Print container status
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          ssh -i ~/.ssh/id_rsa "$SSH_USER@$SSH_HOST" "cd /root/flask-portfolio && docker compose -f docker-compose.prod.yml ps | cat"
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [tests, deploy]
+    if: always()
+    steps:
+      - name: Notify Discord - Success
+        if: ${{ needs.tests.result == 'success' && needs.deploy.result == 'success' }}
+        run: |
+          curl -s -H "Content-Type: application/json" -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
+            -d '{"content":"🚀 Deployment Successful"}'
+
+      - name: Notify Discord - Failure
+        if: ${{ needs.tests.result != 'success' || needs.deploy.result != 'success' }}
+        run: |
+          curl -s -H "Content-Type: application/json" -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
+            -d '{"content":"🚨 Deployment Failed"}' 
